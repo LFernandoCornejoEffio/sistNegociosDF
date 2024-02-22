@@ -9,9 +9,7 @@ import com.fernandoce.sistnegociosdf.entidades.eEmpleado;
 import com.fernandoce.sistnegociosdf.extras.controlBotones;
 import com.fernandoce.sistnegociosdf.extras.controlLabel;
 import com.fernandoce.sistnegociosdf.extras.controlValidaciones;
-import com.fernandoce.sistnegociosdf.formularios.frmCambiarContrasenia;
 import com.fernandoce.sistnegociosdf.formularios.frmLogin;
-import com.fernandoce.sistnegociosdf.formularios.frmPrincipal;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -29,6 +27,7 @@ public class ctrlLogin extends frmLogin implements MouseListener, KeyListener {
     controlValidaciones ctrlValidaciones;
     controlBotones ctrlBotones;
     controlLabel ctrlLabel;
+
     empleadoDaoImpl empleadoDAOImpl;
 
     public ctrlLogin() {
@@ -60,31 +59,22 @@ public class ctrlLogin extends frmLogin implements MouseListener, KeyListener {
             if (txtUser.getText().equals("") || String.valueOf(txtPass.getPassword()).equals("")) {
                 JOptionPane.showMessageDialog(this, "Estimado usuario los campos usuario y contraseña son obligatorios", "Validación de Campos", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                if (login() != null) {
+                eEmpleado eEmpleado = login();
+                if (eEmpleado != null) {
                     if (login().getPrimerAcceso().equals("SI")) {
-                        JOptionPane.showMessageDialog(rootPane, "Bienvenido al sistema: \n" + login().getNombre().toUpperCase() + " " + login().getApPaterno().toUpperCase() + " " + login().getApMaterno().toUpperCase());                  
-                        ctrlCambiarContrasenia ctrlCambiarPass = new ctrlCambiarContrasenia(this, true, login().getIdPersona());
+                        JOptionPane.showMessageDialog(rootPane, "BINVENIDO AL SISTEMA: \n" + eEmpleado.getNombre().toUpperCase() + " " + eEmpleado.getApPaterno().toUpperCase() + " " + eEmpleado.getApMaterno().toUpperCase() + "\n"
+                                + "<html><p style=\"color:red\">Al ser su Primer Acceso debe cambiar su contraseña</p></html>");
+                        ctrlCambiarContrasenia ctrlCambiarPass = new ctrlCambiarContrasenia(this, true, eEmpleado);
                         ctrlCambiarPass.setVisible(true);
                         this.setVisible(false);
                     } else {
-                        JOptionPane.showMessageDialog(rootPane, "Bienvenido al sistema: \n" + login().getNombre().toUpperCase() + " " + login().getApPaterno().toUpperCase() + " " + login().getApMaterno().toUpperCase());
-                        frmPrincipal frmPrincipal = new frmPrincipal();
-                        frmPrincipal.setVisible(true);
+                        JOptionPane.showMessageDialog(rootPane, "Bienvenido al sistema: \n" + eEmpleado.getNombre().toUpperCase() + " " + eEmpleado.getApPaterno().toUpperCase() + " " + eEmpleado.getApMaterno().toUpperCase());
+                        ctrlPrincipal ctrlPrincipal = new ctrlPrincipal(eEmpleado);
+                        ctrlPrincipal.setVisible(true);
+                        empleadoDAOImpl.ultimoAcceso(eEmpleado.getIdPersona());
+                        this.dispose();
                     }
                 }
-
-//                if (login().getIdUsuario() > 0) {
-//                    usuario usuario = login();
-//                    if(usuario.getPersonaId().getEstado().equals("Activo") && loginDAOImpl.ultimoAcceso(usuario.getIdUsuario()) == true){
-//                        this.dispose();
-//                        JOptionPane.showMessageDialog(rootPane, "Bienvenido al sistema " + usuario.getNomCompleto(), "Acceso al sistema", JOptionPane.PLAIN_MESSAGE);
-//                        ctrlPrincipal = new controlPrincipal(usuario.getPersonaId().getCargoId().getIdCargo(), usuario.getPersonaId().getIdPersona()); 
-//                    }else{
-//                        JOptionPane.showMessageDialog(this, "El usuario se encuentra inactivo\nPor favor contactar al administrador del sistema", "Acceso al Sistema", JOptionPane.INFORMATION_MESSAGE);
-//                    }
-//                } else {
-//                    JOptionPane.showMessageDialog(rootPane, "Las credenciales ingresadas son incorrectas o no se encuentra registrado", "Acceso Denegado", JOptionPane.ERROR_MESSAGE);
-//                }
             }
         }
     }
@@ -134,11 +124,16 @@ public class ctrlLogin extends frmLogin implements MouseListener, KeyListener {
     @Override
     public void keyTyped(KeyEvent e) {
         ctrlValidaciones = new controlValidaciones();
-        int key = e.getKeyChar();
+        char key = e.getKeyChar();
         if (e.getSource() == txtUser) {
+            if (Character.isLowerCase(key)) {
+                String cad = ("" + key).toUpperCase();
+                key = cad.charAt(0);
+                e.setKeyChar(key);
+            }
             if (ctrlValidaciones.ingresarLetras(key) == false && ctrlValidaciones.ingresarNumeros(key) == false) {
                 e.consume();
-                JOptionPane.showMessageDialog(rootPane, "Solo se permiten letras", "Validación", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(rootPane, "Solo se permiten letras y numeros", "Validación", JOptionPane.INFORMATION_MESSAGE);
             }
         }
 

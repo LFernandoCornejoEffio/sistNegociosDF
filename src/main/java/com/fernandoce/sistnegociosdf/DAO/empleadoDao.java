@@ -5,6 +5,7 @@
 package com.fernandoce.sistnegociosdf.DAO;
 
 import com.fernandoce.sistnegociosdf.entidades.eEmpleado;
+import java.util.List;
 
 /**
  *
@@ -12,4 +13,5 @@ import com.fernandoce.sistnegociosdf.entidades.eEmpleado;
  */
 public interface empleadoDao extends crudDAO<eEmpleado>{
     public eEmpleado login(String username, String password);
+    public List<eEmpleado> listar(String campo, String busqueda);
 }

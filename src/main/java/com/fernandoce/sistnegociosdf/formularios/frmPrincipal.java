@@ -26,57 +26,88 @@ public class frmPrincipal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        panelMenu = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        panelDatosUser = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        txtuser = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        txtCargo = new javax.swing.JLabel();
+        panelContenido = new javax.swing.JPanel();
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1200, Short.MAX_VALUE)
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        javax.swing.GroupLayout panelMenuLayout = new javax.swing.GroupLayout(panelMenu);
+        panelMenu.setLayout(panelMenuLayout);
+        panelMenuLayout.setHorizontalGroup(
+            panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 250, Short.MAX_VALUE)
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        panelMenuLayout.setVerticalGroup(
+            panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 800, Short.MAX_VALUE)
         );
+
+        getContentPane().add(panelMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 250, 800));
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        panelDatosUser.setBackground(new java.awt.Color(255, 255, 255));
+        panelDatosUser.setOpaque(false);
+        panelDatosUser.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel2.setFont(new java.awt.Font("Berlin Sans FB", 1, 18)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel2.setText("Usuario:");
+        panelDatosUser.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 10, 80, 40));
+
+        txtuser.setFont(new java.awt.Font("Arial Narrow", 1, 18)); // NOI18N
+        txtuser.setForeground(new java.awt.Color(0, 0, 0));
+        panelDatosUser.add(txtuser, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 10, 300, 40));
+
+        jLabel4.setFont(new java.awt.Font("Berlin Sans FB", 1, 18)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel4.setText("Cargo:");
+        panelDatosUser.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 10, 70, 40));
+
+        txtCargo.setFont(new java.awt.Font("Arial Narrow", 1, 18)); // NOI18N
+        txtCargo.setForeground(new java.awt.Color(0, 0, 0));
+        panelDatosUser.add(txtCargo, new org.netbeans.lib.awtextra.AbsoluteConstraints(575, 10, 150, 40));
+
+        jPanel1.add(panelDatosUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 10, 1105, 60));
+
+        panelContenido.setBackground(new java.awt.Color(255, 255, 255));
+        panelContenido.setOpaque(false);
+
+        javax.swing.GroupLayout panelContenidoLayout = new javax.swing.GroupLayout(panelContenido);
+        panelContenido.setLayout(panelContenidoLayout);
+        panelContenidoLayout.setHorizontalGroup(
+            panelContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1105, Short.MAX_VALUE)
+        );
+        panelContenidoLayout.setVerticalGroup(
+            panelContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 670, Short.MAX_VALUE)
+        );
+
+        jPanel1.add(panelContenido, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 80, 1105, 670));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 0, 1150, 800));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(frmPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(frmPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(frmPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(frmPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new frmPrincipal().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JPanel jPanel1;
+    public javax.swing.JPanel panelContenido;
+    public javax.swing.JPanel panelDatosUser;
+    public javax.swing.JPanel panelMenu;
+    public javax.swing.JLabel txtCargo;
+    public javax.swing.JLabel txtuser;
     // End of variables declaration//GEN-END:variables
 }

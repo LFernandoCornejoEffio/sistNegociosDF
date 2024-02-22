@@ -17,11 +17,8 @@ public class eTipoDoc {
     public eTipoDoc() {
     }
 
-    public eTipoDoc(int idTipoDoc, String nombreTipoDoc, String abrevTipoDoc, String estadoTipoDoc) {
+    public eTipoDoc(int idTipoDoc) {
         this.idTipoDoc = idTipoDoc;
-        this.nombreTipoDoc = nombreTipoDoc;
-        this.abrevTipoDoc = abrevTipoDoc;
-        this.estadoTipoDoc = estadoTipoDoc;
     }
 
     public eTipoDoc(int idTipoDoc, String abrevTipoDoc) {
@@ -60,5 +57,14 @@ public class eTipoDoc {
     public void setEstadoTipoDoc(String estadoTipoDoc) {
         this.estadoTipoDoc = estadoTipoDoc;
     }
+
+    @Override
+    public String toString() {
+        return abrevTipoDoc;
+    }
     
+    @Override
+    public boolean equals(Object obj) {
+        return this.idTipoDoc == ((eTipoDoc) obj).idTipoDoc;
+    }
 }

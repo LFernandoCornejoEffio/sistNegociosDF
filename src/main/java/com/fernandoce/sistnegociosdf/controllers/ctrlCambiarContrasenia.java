@@ -5,8 +5,10 @@
 package com.fernandoce.sistnegociosdf.controllers;
 
 import com.fernandoce.sistnegociosdf.DAO.DAOImpl.empleadoDaoImpl;
+import com.fernandoce.sistnegociosdf.entidades.eEmpleado;
 import com.fernandoce.sistnegociosdf.extras.controlValidaciones;
 import com.fernandoce.sistnegociosdf.formularios.frmCambiarContrasenia;
+import com.fernandoce.sistnegociosdf.formularios.frmLogin;
 import com.fernandoce.sistnegociosdf.formularios.frmPrincipal;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
@@ -23,14 +25,15 @@ public class ctrlCambiarContrasenia extends frmCambiarContrasenia implements Act
 
     empleadoDaoImpl emDaoImpl;
     controlValidaciones ctrlValidaciones;
-    frmPrincipal frmP;
-    ctrlLogin ctrlL;
+    frmLogin frmLogin = new frmLogin();
+    ctrlLogin ctrlLogin;
 
-    public ctrlCambiarContrasenia(Frame parent, boolean modal, int idPersona) {
+    public ctrlCambiarContrasenia(Frame parent, boolean modal, eEmpleado eEmpleado) {
         super(parent, modal);
         this.setTitle("Cambiar Contraseña");
         this.setSize(400, 400);
-        this.lblIdEmpleado.setText(String.valueOf(idPersona));
+        this.lblIdEmpleado.setText(String.valueOf(eEmpleado.getIdPersona()));
+        this.lblIdEmpleado.setVisible(false);
         this.setLocationRelativeTo(null);
         this.btnGuardar.addActionListener(this);
         this.btnCancelar.addActionListener(this);
@@ -39,7 +42,6 @@ public class ctrlCambiarContrasenia extends frmCambiarContrasenia implements Act
     @Override
     public void actionPerformed(ActionEvent e) {
         emDaoImpl = new empleadoDaoImpl();
-        ctrlL = new ctrlLogin();
         int id = Integer.parseInt(lblIdEmpleado.getText());
         String nuevaPass = this.txtNuevaPass.getText();
         String confirmarPass = this.txtConfirmarPass.getText();
@@ -48,14 +50,12 @@ public class ctrlCambiarContrasenia extends frmCambiarContrasenia implements Act
                 JOptionPane.showMessageDialog(this, "Estimado usuario los campos nueva contraseña y confirmar contraseña son obligatorios", "Validación de Campos", JOptionPane.INFORMATION_MESSAGE);
             } else if (nuevaPass.equals(confirmarPass)) {
                 boolean update = emDaoImpl.cambiarContrasenia(id, nuevaPass);
+
                 if (update == true) {
                     this.setVisible(false);
                     this.dispose();
-
-                    ctrlL.setVisible(false);
-                    ctrlL.dispose();
-                    frmP = new frmPrincipal();
-                    frmP.setVisible(true);
+                    ctrlLogin = new ctrlLogin();
+                    ctrlLogin.setVisible(true);
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "Estimado usuario los campos nueva contraseña y confirmar contraseña no coinciden", "Validación de Campos", JOptionPane.INFORMATION_MESSAGE);
@@ -64,7 +64,9 @@ public class ctrlCambiarContrasenia extends frmCambiarContrasenia implements Act
 
         if (e.getSource() == this.btnCancelar) {
             this.setVisible(false);
-            ctrlL.setVisible(true);
+            this.dispose();
+            ctrlLogin = new ctrlLogin();
+            ctrlLogin.setVisible(true);
         }
     }
 

@@ -1,10 +1,7 @@
 package com.fernandoce.sistnegociosdf.extras;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.security.spec.KeySpec;
-import java.util.Arrays;
 import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -30,37 +27,6 @@ public class encriptacionRSA {
             return null;
         }
     }
-
-//    //Encriptar
-//    public String Encriptar(String encriptar) {
-//        try {
-//            SecretKeySpec secretKeySpec = crearClave(Llave);
-//            Cipher cipher = Cipher.getInstance("AES");
-//            cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
-//            byte[] cadena = encriptar.getBytes("UTF-8");
-//            byte[] encriptada = cipher.doFinal(cadena);
-//            String cadenaEncriptada = Base64.getEncoder().encodeToString(encriptada);
-//            return cadenaEncriptada;
-//        } catch (Exception e) {
-//            return "";
-//        }
-//    }
-//
-//    //desencriptar
-//    public String Desencriptar(String desencriptar) {
-//        try {
-//            SecretKeySpec secretKeySpec = crearClave(Llave);
-//            Cipher cipher = Cipher.getInstance("AES");
-//            cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
-//
-//            byte[] cadena = Base64.getDecoder().decode(desencriptar);
-//            byte[] desencriptacion = cipher.doFinal(cadena);
-//            String cadenaDesencriptada = new String(desencriptacion);
-//            return cadenaDesencriptada;
-//        } catch (Exception e) {
-//            return "";
-//        }
-//    }
 
     private static final int KEY_LENGTH = 256;
     private static final int ITERATION_COUNT = 65536;
