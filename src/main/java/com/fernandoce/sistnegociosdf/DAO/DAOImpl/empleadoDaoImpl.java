@@ -9,22 +9,14 @@ import com.fernandoce.sistnegociosdf.entidades.eEmpleado;
 import com.fernandoce.sistnegociosdf.entidades.eTipoDoc;
 import com.fernandoce.sistnegociosdf.extras.encriptacionRSA;
 import java.awt.HeadlessException;
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.swing.JOptionPane;
 
 /**
@@ -39,7 +31,6 @@ public class empleadoDaoImpl implements empleadoDao {
     ResultSet rs = null;
     List<eEmpleado> listaEmpleados = null;
     eEmpleado empleado;
-    eTipoDoc tipodoc;
     encriptacionRSA encryptRsa;
 
     @Override
@@ -53,7 +44,7 @@ public class empleadoDaoImpl implements empleadoDao {
             pst = conn.prepareStatement(sql);
             pst.setString(1, username);
             rs = pst.executeQuery();
-            while (rs.next()) {
+            if (rs.next()) {
                 String pass = rs.getString("e.contrasenia");
                 unsecure = encryptRsa.decrypt(pass);
                 if (unsecure.equals(password)) {
@@ -68,8 +59,10 @@ public class empleadoDaoImpl implements empleadoDao {
                     return null;
                 }
                 return empleado;
+            } else {
+                JOptionPane.showMessageDialog(null, "El username es incorrecto o no se encuentra registrado", "Acceso Denegado", JOptionPane.ERROR_MESSAGE);
+                return null;
             }
-            return null;
 
         } catch (HeadlessException | SQLException e) {
             JOptionPane.showMessageDialog(null, "Ocurrio un error " + e);
@@ -92,6 +85,52 @@ public class empleadoDaoImpl implements empleadoDao {
     }
 
     @Override
+    public List<eEmpleado> listar(String campo, String busqueda) {
+        conn = Conexion.getConectar();
+        listaEmpleados = new ArrayList();
+        try {
+            String sql = "{CALL buscarUsuarios (?, ?)}";
+            cst = conn.prepareCall(sql);
+            cst.setString(1, campo);
+            cst.setString(2, busqueda);
+            rs = cst.executeQuery();
+            while (rs.next()) {
+                empleado = new eEmpleado();
+                empleado.setIdPersona(rs.getInt("idEmpleado"));
+                empleado.setNombre(rs.getString("nombre"));
+                empleado.setApPaterno(rs.getString("apPaterno"));
+                empleado.setApMaterno(rs.getString("apMaterno"));
+                empleado.setAbrevTipoDoc(rs.getString("abrevTipoDoc"));
+                empleado.setNumDoc(rs.getString("numDoc"));
+                empleado.setCargo(rs.getString("cargo"));
+                empleado.setTelefono(rs.getString("telefono"));
+                empleado.setDireccion(rs.getString("direccion"));
+                empleado.setUltimo_Acceso(rs.getString("ultimo_acceso"));
+                empleado.setUsername(rs.getString("username"));
+                listaEmpleados.add(empleado);
+            }
+            return listaEmpleados;
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Ocurrio un error al Listar. \nError: " + e.getMessage());
+            return null;
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (cst != null) {
+                    cst.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Error al cerrar conexion: " + e);
+            }
+        }
+    }
+
+    @Override
     public List<eEmpleado> listar() {
         return null;
     }
@@ -102,6 +141,7 @@ public class empleadoDaoImpl implements empleadoDao {
         encryptRsa = new encriptacionRSA();
         boolean rpta = false;
         int rpt = 0;
+        String username;
         try {
             String sql = "{CALL insertarEmpleado (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
             cst = conn.prepareCall(sql);
@@ -114,7 +154,8 @@ public class empleadoDaoImpl implements empleadoDao {
             cst.setString(7, objeto.getDireccion());
             cst.setString(8, objeto.getCargo());
             String nameAll = objeto.getNombre() + " " + objeto.getApPaterno() + " " + objeto.getApMaterno();
-            cst.setString(9, generarUser(nameAll));
+            username = generarUser(nameAll.toUpperCase());
+            cst.setString(9, username);
             String secure = encryptRsa.encrypt(getPassDefault());
             cst.setString(10, secure);
             rs = cst.executeQuery();
@@ -127,7 +168,7 @@ public class empleadoDaoImpl implements empleadoDao {
                 JOptionPane.showMessageDialog(null, "El usuario ya se encuentra registrado");
             } else if (rpt > 0) {
                 rpta = true;
-                JOptionPane.showMessageDialog(null, "El usuario se registro con exito");
+                JOptionPane.showMessageDialog(null, "El usuario se registro con exito\n\nEl usuario se registro con las credenciales:\nUsername: " + username + "\nContraseña: " + getPassDefault());
             } else {
                 rpta = false;
                 JOptionPane.showMessageDialog(null, "ocurrio un error, no se logro registrar " + rpta);
@@ -154,33 +195,97 @@ public class empleadoDaoImpl implements empleadoDao {
 
     @Override
     public boolean editar(eEmpleado objeto) {
-        return false;
+        conn = Conexion.getConectar();
+        boolean rpta = false;
+        try {
+            String sql = "{CALL editarEmpleado (?, ?, ?, ?, ?, ?, ?, ?, ?)}";
+            cst = conn.prepareCall(sql);
+            cst.setInt(1, objeto.getIdPersona());
+            cst.setString(2, objeto.getNombre());
+            cst.setString(3, objeto.getApPaterno());
+            cst.setString(4, objeto.getApMaterno());
+            cst.setInt(5, objeto.getTipoDoc());
+            cst.setString(6, objeto.getNumDoc());
+            cst.setString(7, objeto.getTelefono());
+            cst.setString(8, objeto.getDireccion());
+            cst.setString(9, objeto.getCargo());
+            cst.execute();
+            rpta = true;
+            return rpta;
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al editar " + e);
+            return rpta;
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (cst != null) {
+                    cst.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Error al cerrar conexion: " + e);
+            }
+        }
     }
 
     @Override
     public boolean eliminar(int idObjeto) {
-        return false;
+        conn = Conexion.getConectar();
+        boolean rpta = false;
+        try {
+            String sql = "DELETE FROM persona WHERE idPersona = ?";
+            pst = conn.prepareStatement(sql);
+            pst.setInt(1, idObjeto);
+            int N = pst.executeUpdate();
+            if (N != 0) {
+                rpta = true;
+                return rpta;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al eliminar el usuario " + e);
+            return false;
+        } finally {
+            try {
+                if (pst != null) {
+                    pst.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Error al cerrar conexiones "+e);
+            }
+        }
     }
 
     @Override
     public eEmpleado obtenerObjetoPorId(int idObjeto) {
         conn = Conexion.getConectar();
         empleado = new eEmpleado();
-        encryptRsa = new encriptacionRSA();
-        String unsecure;
 
         System.out.println("idObjeto: " + idObjeto);
         try {
-            String sql = "SELECT contrasenia FROM empleado WHERE idEmpleado = ?";
+            String sql = "SELECT * FROM vista_empleados WHERE idEmpleado = ?";
             pst = conn.prepareStatement(sql);
             pst.setInt(1, idObjeto);
             rs = pst.executeQuery();
-
             while (rs.next()) {
-                String pass = rs.getString("contrasenia");
-                System.out.println("Pass_: " + pass);
-                unsecure = encryptRsa.decrypt(pass);
-                empleado.setContrasenia(unsecure);
+                empleado.setIdPersona(rs.getInt("idEmpleado"));
+                empleado.setNombre(rs.getString("nombre"));
+                empleado.setApPaterno(rs.getString("apPaterno"));
+                empleado.setApMaterno(rs.getString("apMaterno"));
+                empleado.setTipoDoc(rs.getInt("tipoDocId"));
+                empleado.setAbrevTipoDoc(rs.getString("abrevTipoDoc"));
+                empleado.setNumDoc(rs.getString("numDoc"));
+                empleado.setCargo(rs.getString("cargo"));
+                empleado.setTelefono(rs.getString("telefono"));
+                empleado.setDireccion(rs.getString("direccion"));
                 return empleado;
             }
         } catch (SQLException e) {
@@ -316,28 +421,27 @@ public class empleadoDaoImpl implements empleadoDao {
 
     public boolean resetContrasenia(int idEmpleado) {
         conn = Conexion.getConectar();
-        String passReset = "";
+        encryptRsa = new encriptacionRSA();
+        String passReset;
         try {
             passReset = encryptRsa.encrypt(getPassDefault());
             String sql = "UPDATE empleado SET contrasenia = ?, primerAcceso = 'SI' WHERE idEmpleado = ?";
             pst = conn.prepareStatement(sql);
             pst.setString(1, passReset);
             pst.setInt(2, idEmpleado);
-            rs = pst.executeQuery();
-            if (rs.next()) {
+            int N = pst.executeUpdate();
+            if (N != 0) {
                 JOptionPane.showMessageDialog(null, "Se reseteo la contraseña con exito.");
                 return true;
             } else {
+                JOptionPane.showMessageDialog(null, "Ocurrio un error al resetear.");
                 return false;
             }
         } catch (HeadlessException | SQLException e) {
-            JOptionPane.showMessageDialog(null, "Ocurrio un error al resetear la contraseña");
+            JOptionPane.showMessageDialog(null, "Ocurrio un error al resetear la contraseña " + e);
             return false;
-        }finally {
+        } finally {
             try {
-                if (rs != null) {
-                    rs.close();
-                }
                 if (pst != null) {
                     pst.close();
                 }
@@ -355,8 +459,8 @@ public class empleadoDaoImpl implements empleadoDao {
         encryptRsa = new encriptacionRSA();
         try {
             String sql = "UPDATE empleado SET contrasenia = ?, primerAcceso = 'NO' WHERE idEmpleado = ?";
-            
-        String passOld = getPass(idEmpleado);
+
+            String passOld = getPass(idEmpleado);
             if (pass.toLowerCase().contains("negociosdf") == true) {
                 JOptionPane.showMessageDialog(null, "Estimado usuario, la contraseña no puede contener \"NEGOCIOSDF\".\nPor favor intenta con una contraseña diferente.");
                 return false;
@@ -365,7 +469,7 @@ public class empleadoDaoImpl implements empleadoDao {
                 return false;
             } else {
                 pass = encryptRsa.encrypt(pass);
-                
+
                 pst = conn.prepareStatement(sql);
                 pst.setString(1, pass);
                 pst.setInt(2, idEmpleado);
@@ -378,7 +482,7 @@ public class empleadoDaoImpl implements empleadoDao {
                 }
             }
         } catch (HeadlessException | SQLException e) {
-            JOptionPane.showMessageDialog(null, "Ocurrio un error al cambiar la contraseña.\n"+e);
+            JOptionPane.showMessageDialog(null, "Ocurrio un error al cambiar la contraseña.\n" + e);
             return false;
         } finally {
             try {
@@ -409,26 +513,28 @@ public class empleadoDaoImpl implements empleadoDao {
             while (rs.next()) {
                 pass = encryptRsa.decrypt(rs.getString("contrasenia"));
                 return pass;
-                
+
             }
             return pass;
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error: " + e);
             return null;
-        } 
+        }
     }
 
     public static void main(String[] args) {
-        String name = "Luis Pa";
-        String apPat = "Cor";
-        String apMat = "Eff";
+        int id = 20;
+        String name = "Lidia Maria";
+        String apPat = "Efio";
+        String apMat = "Chafloque";
         int tipoD = 1;
-        String numDoc = "111a1145";
+        String numDoc = "0012301";
         String tel = "000";
         String direcion = "ds";
-        String cargo = "Vendedor";
+        String cargo = "Administrador";
         empleadoDaoImpl eI = new empleadoDaoImpl();
         eEmpleado e = new eEmpleado();
+        e.setIdPersona(id);
         e.setNombre(name);
         e.setApPaterno(apPat);
         e.setApMaterno(apMat);
@@ -437,10 +543,16 @@ public class empleadoDaoImpl implements empleadoDao {
         e.setTelefono(tel);
         e.setDireccion(direcion);
         e.setCargo(cargo);
-//        System.out.println(eI.insertar(e));
+        System.out.println(eI.editar(e));
 //        System.out.println(eI.obtenerObjetoPorId(15).getContrasenia());
 //        System.out.println(eI.login("LPCE1", "negociosDF24").getNombre());
 //        System.out.println(eI.getPass(11));
 //        System.out.println(eI.cambiarContrasenia(15, "12345"));
+//        List<eEmpleado> list = eI.listar("", "");
+//        
+//        for (int i = 0; i < list.size(); i++) {
+//            e.get
+//        }
     }
+
 }
