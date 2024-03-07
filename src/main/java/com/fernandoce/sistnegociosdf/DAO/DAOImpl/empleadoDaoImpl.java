@@ -8,7 +8,16 @@ import com.fernandoce.sistnegociosdf.DAO.empleadoDao;
 import com.fernandoce.sistnegociosdf.entidades.eEmpleado;
 import com.fernandoce.sistnegociosdf.entidades.eTipoDoc;
 import com.fernandoce.sistnegociosdf.extras.encriptacionRSA;
+import com.fernandoce.sistnegociosdf.extras.fechaActual;
 import java.awt.HeadlessException;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,8 +25,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
 
 /**
  *
@@ -519,6 +538,56 @@ public class empleadoDaoImpl implements empleadoDao {
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error: " + e);
             return null;
+        }
+    }
+    
+    public JasperPrint reporteUsuarios(){
+        conn = Conexion.getConectar();
+        String url = "src/main/resources/reportes/";
+        String ruta = "D:/NegociosDF/Reportes/Usuarios/";
+        File reporte = new File(url+"reporteUsuariosCargo.jasper");
+        fechaActual fecha = new fechaActual();
+        final String nameFile = "reporte_"+fecha.getFechaActual() + ".pdf";
+        Map parametro = new HashMap();
+        parametro.put("filtroCargo", "Administrador");
+        
+        if(!reporte.exists()){
+            JOptionPane.showMessageDialog(null, "El reporte no se encuentra disponible");
+            return null;
+        }
+        InputStream inputStream;
+        try {
+            inputStream = new BufferedInputStream(new FileInputStream(reporte.getAbsoluteFile()));
+            JasperReport jasper = (JasperReport) JRLoader.loadObject(inputStream);
+            
+            JasperPrint print = JasperFillManager.fillReport(jasper, parametro, conn);
+            
+            String fileSalida = ruta + nameFile;
+            
+            FileOutputStream outputStream = new FileOutputStream(new File(fileSalida));            
+            
+            JasperExportManager.exportReportToPdfStream(print, outputStream);
+            JOptionPane.showMessageDialog(null, "Se genero el reporte correctamente.");
+            
+            outputStream.close();
+            inputStream.close();
+            return print;
+        } catch (FileNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, "Error FileNotFoundException.\n"+ex);
+            return null;
+        } catch (JRException ex) {
+            JOptionPane.showMessageDialog(null, "Error JRException.\n"+ex);
+            System.out.println("Error JRE: "+ex);
+            return null;
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error IOException.\n"+ex);
+            return null;
+        }finally{
+            try {
+                conn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(empleadoDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 

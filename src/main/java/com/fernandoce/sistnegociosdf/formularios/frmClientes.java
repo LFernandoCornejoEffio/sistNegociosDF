@@ -4,20 +4,19 @@
  */
 package com.fernandoce.sistnegociosdf.formularios;
 
-
 /**
  *
  * @author lfern
  */
-public class frmUsuarios extends javax.swing.JPanel {
+public class frmClientes extends javax.swing.JPanel {
 
     /**
-     * Creates new form frmUsuarios
+     * Creates new form frmClientes
      */
-    public frmUsuarios() {
+    public frmClientes() {
         initComponents();
     }
-        
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -27,12 +26,6 @@ public class frmUsuarios extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        popMenuUser = new javax.swing.JPopupMenu();
-        menuEditar = new javax.swing.JMenuItem();
-        jSeparator2 = new javax.swing.JPopupMenu.Separator();
-        menuEliminar = new javax.swing.JMenuItem();
-        jSeparator3 = new javax.swing.JPopupMenu.Separator();
-        menuReset = new javax.swing.JMenuItem();
         btnNuevo = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -41,23 +34,10 @@ public class frmUsuarios extends javax.swing.JPanel {
         cbBuscar = new javax.swing.JComboBox<>();
         btnBuscar = new javax.swing.JButton();
         btnLimpiar = new javax.swing.JButton();
-        btnReporte = new javax.swing.JButton();
         scrollTblUsuarios = new javax.swing.JScrollPane();
-        tblUsuarios = new javax.swing.JTable();
-        btnExcel = new javax.swing.JButton();
+        tblClientes = new javax.swing.JTable();
 
-        menuEditar.setText("Editar Usuario");
-        popMenuUser.add(menuEditar);
-        popMenuUser.add(jSeparator2);
-
-        menuEliminar.setText("Eliminar Usuario");
-        popMenuUser.add(menuEliminar);
-        popMenuUser.add(jSeparator3);
-
-        menuReset.setText("Resetear Contraseña");
-        popMenuUser.add(menuReset);
-
-        setBorder(javax.swing.BorderFactory.createTitledBorder(null, "USUARIOS", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 14))); // NOI18N
+        setBorder(javax.swing.BorderFactory.createTitledBorder(null, "CLIENTES", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 14))); // NOI18N
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         btnNuevo.setBackground(new java.awt.Color(51, 153, 255));
@@ -84,7 +64,7 @@ public class frmUsuarios extends javax.swing.JPanel {
         cbBuscar.setBackground(new java.awt.Color(255, 255, 255));
         cbBuscar.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         cbBuscar.setForeground(new java.awt.Color(0, 0, 0));
-        cbBuscar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "CARGO", "NOMBRES", "DOCUMENTO" }));
+        cbBuscar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "NOMBRES", "DOCUMENTO" }));
         jPanel1.add(cbBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 20, 150, 30));
 
         btnBuscar.setBackground(new java.awt.Color(255, 255, 255));
@@ -99,14 +79,11 @@ public class frmUsuarios extends javax.swing.JPanel {
         btnLimpiar.setText("LIMPIAR");
         jPanel1.add(btnLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 20, 130, 30));
 
-        btnReporte.setText("Reporte");
-        jPanel1.add(btnReporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 20, -1, -1));
-
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 90, 1085, 70));
 
         scrollTblUsuarios.setOpaque(false);
 
-        tblUsuarios.setModel(new javax.swing.table.DefaultTableModel(
+        tblClientes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -114,39 +91,24 @@ public class frmUsuarios extends javax.swing.JPanel {
 
             }
         ));
-        tblUsuarios.setComponentPopupMenu(popMenuUser);
-        tblUsuarios.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        tblUsuarios.setOpaque(false);
-        scrollTblUsuarios.setViewportView(tblUsuarios);
+        tblClientes.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        tblClientes.setOpaque(false);
+        scrollTblUsuarios.setViewportView(tblClientes);
 
-        add(scrollTblUsuarios, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 1085, 430));
-
-        btnExcel.setBackground(new java.awt.Color(204, 204, 204));
-        btnExcel.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        btnExcel.setForeground(new java.awt.Color(0, 0, 0));
-        btnExcel.setText("EXCEL");
-        add(btnExcel, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 620, 130, 30));
+        add(scrollTblUsuarios, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 1085, 480));
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton btnBuscar;
-    public javax.swing.JButton btnExcel;
     public javax.swing.JButton btnLimpiar;
     public javax.swing.JButton btnNuevo;
-    public javax.swing.JButton btnReporte;
     public javax.swing.JComboBox<String> cbBuscar;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JPopupMenu.Separator jSeparator2;
-    private javax.swing.JPopupMenu.Separator jSeparator3;
-    public javax.swing.JMenuItem menuEditar;
-    public javax.swing.JMenuItem menuEliminar;
-    public javax.swing.JMenuItem menuReset;
-    public javax.swing.JPopupMenu popMenuUser;
     public javax.swing.JScrollPane scrollTblUsuarios;
-    public javax.swing.JTable tblUsuarios;
+    public javax.swing.JTable tblClientes;
     public javax.swing.JTextField txtBuscar;
     // End of variables declaration//GEN-END:variables
 }

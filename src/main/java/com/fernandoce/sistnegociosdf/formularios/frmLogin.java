@@ -4,8 +4,6 @@
  */
 package com.fernandoce.sistnegociosdf.formularios;
 
-import java.awt.Color;
-
 /**
  *
  * @author lfern
@@ -13,11 +11,10 @@ import java.awt.Color;
 public class frmLogin extends javax.swing.JFrame {
 
     /**
-     * Creates new form frmLogin
+     * Creates new form frmLogin2
      */
     public frmLogin() {
         initComponents();
-        setBackground(new Color(0,0,0,0));
     }
 
     /**
@@ -29,11 +26,9 @@ public class frmLogin extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        fondo1 = new com.fernandoce.sistnegociosdf.formularios.components.fondo();
-        fondoIzq1 = new com.fernandoce.sistnegociosdf.formularios.components.fondoIzq();
-        jLabel2 = new javax.swing.JLabel();
-        lblIconNegocio = new javax.swing.JLabel();
-        fondo2 = new com.fernandoce.sistnegociosdf.formularios.components.fondo();
+        jPanel1 = new javax.swing.JPanel();
+        fondoLogo = new javax.swing.JPanel();
+        fondoForm = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         txtUser = new javax.swing.JTextField();
@@ -45,62 +40,62 @@ public class frmLogin extends javax.swing.JFrame {
         btnCancelar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setUndecorated(true);
 
-        fondo1.setBackground(new java.awt.Color(255, 255, 255));
-        fondo1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        fondoIzq1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        javax.swing.GroupLayout fondoLogoLayout = new javax.swing.GroupLayout(fondoLogo);
+        fondoLogo.setLayout(fondoLogoLayout);
+        fondoLogoLayout.setHorizontalGroup(
+            fondoLogoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 250, Short.MAX_VALUE)
+        );
+        fondoLogoLayout.setVerticalGroup(
+            fondoLogoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 450, Short.MAX_VALUE)
+        );
 
-        jLabel2.setFont(new java.awt.Font("Courier New", 1, 24)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("NEGOCIOS D&F");
-        fondoIzq1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(35, 250, 180, 50));
-        fondoIzq1.add(lblIconNegocio, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 100, 150, 150));
+        jPanel1.add(fondoLogo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 250, 450));
 
-        fondo1.add(fondoIzq1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 250, 450));
-
-        fondo2.setBackground(new java.awt.Color(255, 255, 255));
-        fondo2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        fondoForm.setBackground(new java.awt.Color(255, 255, 255));
+        fondoForm.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Gadugi", 1, 26)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("INICIAR SESIÓN");
-        fondo2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 70, 320, 40));
+        fondoForm.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 40, 320, 40));
 
         jLabel4.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setText("USUARIO:");
-        fondo2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 140, 320, 30));
+        fondoForm.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 110, 320, 30));
 
         txtUser.setBackground(new java.awt.Color(255, 255, 255));
         txtUser.setFont(new java.awt.Font("Arial Black", 0, 12)); // NOI18N
         txtUser.setForeground(new java.awt.Color(0, 0, 0));
         txtUser.setBorder(null);
         txtUser.setOpaque(false);
-        fondo2.add(txtUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 170, 320, 30));
+        fondoForm.add(txtUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 140, 320, 25));
 
         jSeparator2.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator2.setForeground(new java.awt.Color(0, 0, 0));
-        fondo2.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 200, 320, 10));
+        fondoForm.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 165, 320, 10));
 
         jLabel3.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(0, 0, 0));
         jLabel3.setText("CONTRASEÑA:");
-        fondo2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 230, 320, 30));
+        fondoForm.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 200, 320, 30));
 
         txtPass.setFont(new java.awt.Font("Arial Black", 0, 12)); // NOI18N
         txtPass.setForeground(new java.awt.Color(0, 0, 0));
         txtPass.setBorder(null);
         txtPass.setDisabledTextColor(new java.awt.Color(255, 102, 102));
         txtPass.setOpaque(false);
-        fondo2.add(txtPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 260, 320, 30));
+        fondoForm.add(txtPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 230, 320, 25));
 
         jSeparator3.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator3.setForeground(new java.awt.Color(0, 0, 0));
-        fondo2.add(jSeparator3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 290, 320, 10));
+        fondoForm.add(jSeparator3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 255, 320, 10));
 
         btnIngresar.setBackground(new java.awt.Color(0, 0, 255));
         btnIngresar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
@@ -110,7 +105,7 @@ public class frmLogin extends javax.swing.JFrame {
         btnIngresar.setBorderPainted(false);
         btnIngresar.setFocusPainted(false);
         btnIngresar.setIconTextGap(5);
-        fondo2.add(btnIngresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 320, 155, 40));
+        fondoForm.add(btnIngresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 290, 155, 40));
 
         btnCancelar.setBackground(new java.awt.Color(255, 0, 0));
         btnCancelar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
@@ -120,19 +115,19 @@ public class frmLogin extends javax.swing.JFrame {
         btnCancelar.setBorderPainted(false);
         btnCancelar.setFocusPainted(false);
         btnCancelar.setIconTextGap(5);
-        fondo2.add(btnCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 320, 155, 40));
+        fondoForm.add(btnCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(205, 290, 155, 40));
 
-        fondo1.add(fondo2, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 0, 400, 450));
+        jPanel1.add(fondoForm, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 0, 400, 450));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(fondo1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(fondo1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -141,16 +136,14 @@ public class frmLogin extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton btnCancelar;
     public javax.swing.JButton btnIngresar;
-    private com.fernandoce.sistnegociosdf.formularios.components.fondo fondo1;
-    private com.fernandoce.sistnegociosdf.formularios.components.fondo fondo2;
-    private com.fernandoce.sistnegociosdf.formularios.components.fondoIzq fondoIzq1;
+    public javax.swing.JPanel fondoForm;
+    public javax.swing.JPanel fondoLogo;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
-    public javax.swing.JLabel lblIconNegocio;
     public javax.swing.JPasswordField txtPass;
     public javax.swing.JTextField txtUser;
     // End of variables declaration//GEN-END:variables

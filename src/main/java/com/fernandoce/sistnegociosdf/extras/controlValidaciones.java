@@ -36,4 +36,9 @@ public class controlValidaciones {
         boolean borrar = key == 8;
         return numeros || borrar;
     }
+    
+    public boolean espacio(int key){
+        boolean espacio = key == 32;
+        return espacio;
+    }
 }

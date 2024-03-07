@@ -8,14 +8,15 @@ import com.fernandoce.sistnegociosdf.DAO.DAOImpl.empleadoDaoImpl;
 import com.fernandoce.sistnegociosdf.entidades.eEmpleado;
 import com.fernandoce.sistnegociosdf.extras.controlBotones;
 import com.fernandoce.sistnegociosdf.extras.controlLabel;
+import com.fernandoce.sistnegociosdf.extras.controlPaneles;
 import com.fernandoce.sistnegociosdf.extras.controlValidaciones;
+import com.fernandoce.sistnegociosdf.formularios.components.logo;
 import com.fernandoce.sistnegociosdf.formularios.frmLogin;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 /**
@@ -27,18 +28,22 @@ public class ctrlLogin extends frmLogin implements MouseListener, KeyListener {
     controlValidaciones ctrlValidaciones;
     controlBotones ctrlBotones;
     controlLabel ctrlLabel;
+    controlPaneles ctrlPaneles;
 
     empleadoDaoImpl empleadoDAOImpl;
+    
+    logo log = new logo();
 
     public ctrlLogin() {
         Iniciar();
     }
 
     private void Iniciar() {
-        this.setVisible(true);
         this.setSize(650, 450);
         this.setLocationRelativeTo(null);
-        setImgLbl(this.lblIconNegocio, "src/main/resources/imagenes/iconVent.png");
+        this.setTitle("SISTEMA NEGOCIOS D&F - INICIO DE SESIÓN");
+        setFondos();
+      
         setImgBtn(btnIngresar, "src/main/resources/imagenes/iconAcceso.png");
         setImgBtn(btnCancelar, "src/main/resources/imagenes/cerrar-sesion.png");
 
@@ -47,6 +52,7 @@ public class ctrlLogin extends frmLogin implements MouseListener, KeyListener {
 
         this.btnCancelar.addMouseListener(this);
         this.btnIngresar.addMouseListener(this);
+        this.setVisible(true);
     }
 
     @Override
@@ -98,12 +104,14 @@ public class ctrlLogin extends frmLogin implements MouseListener, KeyListener {
     public void mouseExited(MouseEvent e) {
 
     }
-
-    private void setImgLbl(JLabel jLabel, String root) {
+    
+    private void setFondos(){
+        ctrlPaneles = new controlPaneles();
         ctrlLabel = new controlLabel();
-        int ancho = jLabel.getWidth();
-        int alto = jLabel.getHeight();
-        ctrlLabel.mostrarImgLbl(jLabel, root, ancho, alto);
+        log = new logo();
+        ctrlPaneles.showPanel(this.fondoLogo, log, 250, 450);
+        log.setLocation(0, 0);
+        ctrlLabel.mostrarImgLbl(log.lblIconNegocio, "src/main/resources/imagenes/iconVent.png", 150, 150);
     }
 
     private void setImgBtn(JButton button, String root) {

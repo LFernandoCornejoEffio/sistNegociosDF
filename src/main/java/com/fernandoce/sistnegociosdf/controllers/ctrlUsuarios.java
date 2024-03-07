@@ -6,34 +6,37 @@ package com.fernandoce.sistnegociosdf.controllers;
 
 import com.fernandoce.sistnegociosdf.DAO.DAOImpl.empleadoDaoImpl;
 import com.fernandoce.sistnegociosdf.DAO.DAOImpl.tipoDocDaoImpl;
-import com.fernandoce.sistnegociosdf.entidades.eCliente;
 import com.fernandoce.sistnegociosdf.entidades.eEmpleado;
 import com.fernandoce.sistnegociosdf.entidades.eTipoDoc;
 import com.fernandoce.sistnegociosdf.extras.controlBotones;
 import com.fernandoce.sistnegociosdf.extras.controlItemMenu;
-import com.fernandoce.sistnegociosdf.extras.controlTabla;
+import com.fernandoce.sistnegociosdf.extras.controlValidaciones;
+import com.fernandoce.sistnegociosdf.extras.exportarExcel;
 import com.fernandoce.sistnegociosdf.formularios.frmEditarUsuario;
 import com.fernandoce.sistnegociosdf.formularios.frmNuevoUsuario;
 import com.fernandoce.sistnegociosdf.formularios.frmPrincipal;
 import com.fernandoce.sistnegociosdf.formularios.frmUsuarios;
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.ArrayList;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
  * @author lfern
  */
-public final class ctrlUsuarios extends frmUsuarios implements ActionListener {
+public final class ctrlUsuarios extends frmUsuarios implements ActionListener, KeyListener {
 
+    controlValidaciones ctrlValidaciones;
     controlBotones ctrlBotones;
     controlItemMenu ctrlItemMenu;
     empleadoDaoImpl empleadoDaoImpl;
@@ -49,9 +52,11 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener {
         this.btnNuevo.addActionListener(this);
         this.btnBuscar.addActionListener(this);
         this.btnLimpiar.addActionListener(this);
+        this.btnExcel.addActionListener(this);
         this.menuEditar.addActionListener(this);
         this.menuEliminar.addActionListener(this);
         this.menuReset.addActionListener(this);
+        this.btnReporte.addActionListener(this);
         Listar(tblUsuarios, "", "");
         iconBtn();
         this.setVisible(true);
@@ -69,6 +74,11 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener {
             nuevoUsuario();
         }
 
+        if (e.getSource() == this.btnExcel) {
+            exportarExcel excel = new exportarExcel();
+            excel.excelReporte("Usuarios", tblUsuarios);
+        }
+
         if (e.getSource() == this.btnBuscar) {
             String campo = cbBuscar.getSelectedItem().toString();
             String busqueda = txtBuscar.getText();
@@ -77,6 +87,10 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener {
 
         if (e.getSource() == this.btnLimpiar) {
             limpiarBusqueda();
+        }
+        
+        if (e.getSource() == this.btnReporte) {
+            reporte();
         }
 
         if (e.getSource() == this.menuEditar) {
@@ -126,7 +140,7 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener {
         }
 
         if (e.getSource() == frmNuevoUsuario.btnLimpiar) {
-            btnLimpiar();
+            btnLimpiarNuevo();
         }
 
         if (e.getSource() == frmNuevoUsuario.btnCancelar) {
@@ -181,6 +195,13 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener {
         frmNuevoUsuario.btnGuardar.addActionListener(this);
         frmNuevoUsuario.btnLimpiar.addActionListener(this);
         frmNuevoUsuario.btnCancelar.addActionListener(this);
+        //Eventos para tipear
+        frmNuevoUsuario.txtNombres.addKeyListener(this);
+        frmNuevoUsuario.txtPaterno.addKeyListener(this);
+        frmNuevoUsuario.txtMaterno.addKeyListener(this);
+        frmNuevoUsuario.txtNumDoc.addKeyListener(this);
+        frmNuevoUsuario.txtDireccion.addKeyListener(this);
+        frmNuevoUsuario.txtTelefono.addKeyListener(this);
         comboTipoDoc(frmNuevoUsuario.cbTipoDoc);
         frmNuevoUsuario.setVisible(true);
     }
@@ -188,7 +209,7 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener {
     private void btnGuardar(eEmpleado empleado) {
         empleadoDaoImpl = new empleadoDaoImpl();
         empleadoDaoImpl.insertar(empleado);
-        btnLimpiar();
+        btnLimpiarNuevo();
         Listar(tblUsuarios, "", "");
         frmNuevoUsuario.dispose();
     }
@@ -206,23 +227,22 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener {
         frmEditarUsuario.dispose();
     }
 
-        
-    private void eliminar(int idPersona){
+    private void eliminar(int idPersona) {
         empleadoDaoImpl = new empleadoDaoImpl();
         boolean delete = empleadoDaoImpl.eliminar(idPersona);
-        if(delete == true){
+        if (delete == true) {
             JOptionPane.showMessageDialog(frmEditarUsuario, "El usuario se elimino con exito.");
             Listar(tblUsuarios, "", "");
-        }else{
+        } else {
             JOptionPane.showMessageDialog(frmEditarUsuario, "Ocurrio un error al eliminar al usuario.");
         }
     }
-    
-    private void btnLimpiar() {
+
+    private void btnLimpiarNuevo() {
         frmNuevoUsuario.txtNombres.setText("");
         frmNuevoUsuario.txtPaterno.setText("");
         frmNuevoUsuario.txtMaterno.setText("");
-        frmNuevoUsuario.cbTipoDoc.setSelectedIndex(3);
+        frmNuevoUsuario.cbTipoDoc.setSelectedIndex(0);
         frmNuevoUsuario.txtNumDoc.setText("");
         frmNuevoUsuario.txtTelefono.setText("");
         frmNuevoUsuario.txtDireccion.setText("");
@@ -254,17 +274,24 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener {
         empleado = empleadoDaoImpl.obtenerObjetoPorId(idPersona);
         frmEditarUsuario.idPersona.setText(String.valueOf(empleado.getIdPersona()));
         frmEditarUsuario.idPersona.setVisible(false);
-        frmEditarUsuario.txtNombre.setText(empleado.getNombre());
-        frmEditarUsuario.txtPaterno.setText(empleado.getApPaterno());
-        frmEditarUsuario.txtMaterno.setText(empleado.getApMaterno());
+        frmEditarUsuario.txtNombre.setText(empleado.getNombre().toUpperCase());
+        frmEditarUsuario.txtPaterno.setText(empleado.getApPaterno().toUpperCase());
+        frmEditarUsuario.txtMaterno.setText(empleado.getApMaterno().toUpperCase());
         int idTipo = empleado.getTipoDoc();
         frmEditarUsuario.cbTipoDoc.setSelectedItem(new eTipoDoc(idTipo));
-        frmEditarUsuario.txtNumDoc.setText(empleado.getNumDoc());
-        frmEditarUsuario.txtTelefono.setText(empleado.getTelefono());
-        frmEditarUsuario.txtDireccion.setText(empleado.getDireccion());
-        frmEditarUsuario.cbCargo.setSelectedItem(empleado.getCargo());
+        frmEditarUsuario.txtNumDoc.setText(empleado.getNumDoc().toUpperCase());
+        frmEditarUsuario.txtTelefono.setText(empleado.getTelefono().toUpperCase());
+        frmEditarUsuario.txtDireccion.setText(empleado.getDireccion().toUpperCase());
+        frmEditarUsuario.cbCargo.setSelectedItem(empleado.getCargo().toUpperCase());
         frmEditarUsuario.btnCancelar.addActionListener(this);
         frmEditarUsuario.btnGuardar.addActionListener(this);
+        //Eventos para tipear
+        frmEditarUsuario.txtNombre.addKeyListener(this);
+        frmEditarUsuario.txtPaterno.addKeyListener(this);
+        frmEditarUsuario.txtMaterno.addKeyListener(this);
+        frmEditarUsuario.txtNumDoc.addKeyListener(this);
+        frmEditarUsuario.txtDireccion.addKeyListener(this);
+        frmEditarUsuario.txtTelefono.addKeyListener(this);
         frmEditarUsuario.setVisible(true);
     }
 
@@ -273,6 +300,7 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener {
         ctrlBotones.iconoBtn(btnBuscar, rss + "lupa.png", 20, 20);
         ctrlBotones.iconoBtn(btnNuevo, rss + "agregaruser.png", 30, 30);
         ctrlBotones.iconoBtn(btnLimpiar, rss + "limpiar.png", 20, 20);
+        ctrlBotones.iconoBtn(btnExcel, rss + "excel.png", 20, 20);
     }
 
     private void iconItemMenu() {
@@ -286,15 +314,15 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener {
         empleadoDaoImpl = new empleadoDaoImpl();
         List<eEmpleado> lista = empleadoDaoImpl.listar(campo, busqueda);
         DefaultTableModel dtm = new DefaultTableModel();
-        String titulos[] = {"N°", "ID", "Nombre Completo", "Tipo Doc.", "Numero Doc.", "Cargo", "Telefono", "Dirección", "Usuario", "Ultimo Acceso"};
+        String titulos[] = {"ID", "N°", "Nombre Completo", "Tipo Doc.", "Numero Doc.", "Cargo", "Telefono", "Dirección", "Usuario", "Ultimo Acceso"};
         for (String titulo : titulos) {
             dtm.addColumn(titulo);
         }
 
         for (int i = 0; i < lista.size(); i++) {
             Object[] filaTbl = new Object[titulos.length];
-            filaTbl[0] = (i + 1);
-            filaTbl[1] = lista.get(i).getIdPersona();
+            filaTbl[0] = lista.get(i).getIdPersona();
+            filaTbl[1] = (i + 1);
             String nomcomp = lista.get(i).getNombre() + " " + lista.get(i).getApPaterno() + " " + lista.get(i).getApMaterno();
             filaTbl[2] = nomcomp;
             filaTbl[3] = lista.get(i).getAbrevTipoDoc();
@@ -307,8 +335,8 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener {
             dtm.addRow(filaTbl);
         }
         tbl.setModel(dtm);
-        TableColumn colNum = tbl.getColumnModel().getColumn(0);
-        TableColumn colId = tbl.getColumnModel().getColumn(1);
+        TableColumn colId = tbl.getColumnModel().getColumn(0);
+        TableColumn colNum = tbl.getColumnModel().getColumn(1);
         TableColumn colAbrevTipoDoc = tbl.getColumnModel().getColumn(3);
         colNum.setPreferredWidth(20);
         colNum.setMaxWidth(25);
@@ -329,7 +357,7 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener {
         List<eTipoDoc> listaTipoDoc = tipoDocDaoImpl.listar();
         comboBox.removeAllItems();
         for (int i = 0; i < listaTipoDoc.size(); i++) {
-            comboBox.addItem(new eTipoDoc(listaTipoDoc.get(i).getIdTipoDoc(), listaTipoDoc.get(i).getAbrevTipoDoc()));
+            comboBox.addItem(new eTipoDoc(listaTipoDoc.get(i).getIdTipoDoc(), listaTipoDoc.get(i).getAbrevTipoDoc().toUpperCase()));
 
         }
     }
@@ -338,4 +366,43 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener {
         empleadoDaoImpl = new empleadoDaoImpl();
         empleadoDaoImpl.resetContrasenia(idUsuario);
     }
+
+    private JasperPrint reporte(){
+        empleadoDaoImpl = new empleadoDaoImpl();
+        return empleadoDaoImpl.reporteUsuarios();
+    }
+    
+    @Override
+    public void keyTyped(KeyEvent e) {
+        ctrlValidaciones = new controlValidaciones();
+        char key = e.getKeyChar();
+        if (Character.isLowerCase(key)) {
+            String cad = ("" + key).toUpperCase();
+            key = cad.charAt(0);
+            e.setKeyChar(key);
+        }
+
+        if (e.getSource() == frmNuevoUsuario.txtNombres || e.getSource() == frmNuevoUsuario.txtPaterno || e.getSource() == frmNuevoUsuario.txtMaterno || e.getSource() == frmEditarUsuario.txtNombre || e.getSource() == frmEditarUsuario.txtPaterno || e.getSource() == frmEditarUsuario.txtMaterno) {
+            if (ctrlValidaciones.ingresarLetras(key) == false && ctrlValidaciones.espacio(key) == false) {
+                e.consume();
+                JOptionPane.showMessageDialog(null, "Solo se permiten letras", "Validación", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+
+        if (e.getSource() == frmNuevoUsuario.txtTelefono || e.getSource() == frmNuevoUsuario.txtNumDoc || e.getSource() == frmEditarUsuario.txtTelefono || e.getSource() == frmEditarUsuario.txtNumDoc) {
+            if (ctrlValidaciones.ingresarNumeros(key) == false) {
+                e.consume();
+                JOptionPane.showMessageDialog(null, "Solo se permiten numeros", "Validación", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+    }
+
 }
