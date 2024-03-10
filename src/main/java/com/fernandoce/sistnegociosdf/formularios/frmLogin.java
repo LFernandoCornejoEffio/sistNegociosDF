@@ -111,8 +111,7 @@ public class frmLogin extends javax.swing.JFrame {
         btnCancelar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         btnCancelar.setForeground(new java.awt.Color(255, 255, 255));
         btnCancelar.setText("SALIR");
-        btnCancelar.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnCancelar.setBorderPainted(false);
+        btnCancelar.setBorder(null);
         btnCancelar.setFocusPainted(false);
         btnCancelar.setIconTextGap(5);
         fondoForm.add(btnCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(205, 290, 155, 40));

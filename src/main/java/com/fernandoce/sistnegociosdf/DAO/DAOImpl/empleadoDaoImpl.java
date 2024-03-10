@@ -278,7 +278,7 @@ public class empleadoDaoImpl implements empleadoDao {
                     conn.close();
                 }
             } catch (SQLException e) {
-                JOptionPane.showMessageDialog(null, "Error al cerrar conexiones "+e);
+                JOptionPane.showMessageDialog(null, "Error al cerrar conexiones " + e);
             }
         }
     }
@@ -540,18 +540,62 @@ public class empleadoDaoImpl implements empleadoDao {
             return null;
         }
     }
-    
-    public JasperPrint reporteUsuarios(){
+
+    public JasperPrint reporteUsuariosSinFiltro() {
         conn = Conexion.getConectar();
         String url = "src/main/resources/reportes/";
         String ruta = "D:/NegociosDF/Reportes/Usuarios/";
-        File reporte = new File(url+"reporteUsuariosCargo.jasper");
+        File reporte = new File(url + "reportUsuarios.jasper");
         fechaActual fecha = new fechaActual();
-        final String nameFile = "reporte_"+fecha.getFechaActual() + ".pdf";
-        Map parametro = new HashMap();
-        parametro.put("filtroCargo", "Administrador");
+        final String nameFile = "reporte_" + fecha.getFechaActual() + ".pdf";
         
-        if(!reporte.exists()){
+        if (!reporte.exists()) {
+            JOptionPane.showMessageDialog(null, "El reporte no se encuentra disponible");
+            return null;
+        }
+        InputStream inputStream;
+        try {
+            inputStream = new BufferedInputStream(new FileInputStream(reporte.getAbsoluteFile()));
+            JasperReport jasper = (JasperReport) JRLoader.loadObject(inputStream);   
+            JasperPrint print = JasperFillManager.fillReport(jasper, null, conn);
+            String fileSalida = ruta + nameFile;
+            FileOutputStream outputStream = new FileOutputStream(new File(fileSalida));
+            JasperExportManager.exportReportToPdfStream(print, outputStream);
+            JOptionPane.showMessageDialog(null, "Se genero el reporte correctamente.");
+            outputStream.close();
+            inputStream.close();
+            return print;
+        } catch (FileNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, "Error FileNotFoundException.\n" + ex);
+            return null;
+        } catch (JRException ex) {
+            JOptionPane.showMessageDialog(null, "Error JRException.\n" + ex);
+            System.out.println("Error JRE: " + ex);
+            return null;
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error IOException.\n" + ex);
+            return null;
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Error al cerrar la conexión.\n" + ex);
+                return null;
+            }
+        }
+    }
+    
+    public JasperPrint reporteUsuariosCargo(String cargo) {
+        conn = Conexion.getConectar();
+        String url = "src/main/resources/reportes/";
+        String ruta = "D:/NegociosDF/Reportes/Usuarios/";
+        File reporte = new File(url + "reporteUsuariosCargo.jasper");
+        fechaActual fecha = new fechaActual();
+        final String nameFile = "reporte_" + fecha.getFechaActual() + ".pdf";
+        Map parametro = new HashMap();
+        parametro.put("filtroCargo", cargo);
+
+        if (!reporte.exists()) {
             JOptionPane.showMessageDialog(null, "El reporte no se encuentra disponible");
             return null;
         }
@@ -559,69 +603,36 @@ public class empleadoDaoImpl implements empleadoDao {
         try {
             inputStream = new BufferedInputStream(new FileInputStream(reporte.getAbsoluteFile()));
             JasperReport jasper = (JasperReport) JRLoader.loadObject(inputStream);
-            
+
             JasperPrint print = JasperFillManager.fillReport(jasper, parametro, conn);
-            
+
             String fileSalida = ruta + nameFile;
-            
-            FileOutputStream outputStream = new FileOutputStream(new File(fileSalida));            
-            
+
+            FileOutputStream outputStream = new FileOutputStream(new File(fileSalida));
+
             JasperExportManager.exportReportToPdfStream(print, outputStream);
             JOptionPane.showMessageDialog(null, "Se genero el reporte correctamente.");
-            
+
             outputStream.close();
             inputStream.close();
             return print;
         } catch (FileNotFoundException ex) {
-            JOptionPane.showMessageDialog(null, "Error FileNotFoundException.\n"+ex);
+            JOptionPane.showMessageDialog(null, "Error FileNotFoundException.\n" + ex);
             return null;
         } catch (JRException ex) {
-            JOptionPane.showMessageDialog(null, "Error JRException.\n"+ex);
-            System.out.println("Error JRE: "+ex);
+            JOptionPane.showMessageDialog(null, "Error JRException.\n" + ex);
+            System.out.println("Error JRE: " + ex);
             return null;
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Error IOException.\n"+ex);
+            JOptionPane.showMessageDialog(null, "Error IOException.\n" + ex);
             return null;
-        }finally{
+        } finally {
             try {
                 conn.close();
             } catch (SQLException ex) {
-                Logger.getLogger(empleadoDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null, "Error al cerrar la conexión.\n" + ex);
+                return null;
             }
         }
     }
-
-    public static void main(String[] args) {
-        int id = 20;
-        String name = "Lidia Maria";
-        String apPat = "Efio";
-        String apMat = "Chafloque";
-        int tipoD = 1;
-        String numDoc = "0012301";
-        String tel = "000";
-        String direcion = "ds";
-        String cargo = "Administrador";
-        empleadoDaoImpl eI = new empleadoDaoImpl();
-        eEmpleado e = new eEmpleado();
-        e.setIdPersona(id);
-        e.setNombre(name);
-        e.setApPaterno(apPat);
-        e.setApMaterno(apMat);
-        e.setTipoDoc(tipoD);
-        e.setNumDoc(numDoc);
-        e.setTelefono(tel);
-        e.setDireccion(direcion);
-        e.setCargo(cargo);
-        System.out.println(eI.editar(e));
-//        System.out.println(eI.obtenerObjetoPorId(15).getContrasenia());
-//        System.out.println(eI.login("LPCE1", "negociosDF24").getNombre());
-//        System.out.println(eI.getPass(11));
-//        System.out.println(eI.cambiarContrasenia(15, "12345"));
-//        List<eEmpleado> list = eI.listar("", "");
-//        
-//        for (int i = 0; i < list.size(); i++) {
-//            e.get
-//        }
-    }
-
 }

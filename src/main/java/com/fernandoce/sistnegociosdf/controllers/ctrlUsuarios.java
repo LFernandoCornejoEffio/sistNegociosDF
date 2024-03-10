@@ -15,12 +15,15 @@ import com.fernandoce.sistnegociosdf.extras.exportarExcel;
 import com.fernandoce.sistnegociosdf.formularios.frmEditarUsuario;
 import com.fernandoce.sistnegociosdf.formularios.frmNuevoUsuario;
 import com.fernandoce.sistnegociosdf.formularios.frmPrincipal;
+import com.fernandoce.sistnegociosdf.formularios.frmReporteUsuarios;
 import com.fernandoce.sistnegociosdf.formularios.frmUsuarios;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
@@ -43,6 +46,7 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener, K
     frmNuevoUsuario frmNuevoUsuario;
     frmEditarUsuario frmEditarUsuario;
     frmPrincipal frmPrincipal;
+    frmReporteUsuarios frmReporteUsuarios;
     tipoDocDaoImpl tipoDocDaoImpl;
     eEmpleado empleado;
 
@@ -64,6 +68,7 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener, K
         frmPrincipal = new frmPrincipal();
         frmNuevoUsuario = new frmNuevoUsuario(frmPrincipal, true);
         frmEditarUsuario = new frmEditarUsuario(frmPrincipal, true);
+        frmReporteUsuarios = new frmReporteUsuarios(frmPrincipal, true);
     }
 
     @Override
@@ -88,7 +93,7 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener, K
         if (e.getSource() == this.btnLimpiar) {
             limpiarBusqueda();
         }
-        
+
         if (e.getSource() == this.btnReporte) {
             reporte();
         }
@@ -173,12 +178,40 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener, K
         if (e.getSource() == frmEditarUsuario.btnCancelar) {
             frmEditarUsuario.dispose();
         }
+
+        if (e.getSource() == frmReporteUsuarios.btnGenerar) {
+            reportes();
+        }
+
+        if (e.getSource() == frmReporteUsuarios.btnLimpiar) {
+            limpiarReporte();
+        }
+
+        if (e.getSource() == frmReporteUsuarios.btnRegresar) {
+            btnRegresar();
+        }
     }
 
     private void limpiarBusqueda() {
         cbBuscar.setSelectedIndex(0);
         txtBuscar.setText("");
         Listar(tblUsuarios, "", "");
+    }
+
+    private void reporte() {
+        ctrlBotones = new controlBotones();
+        frmPrincipal = new frmPrincipal();
+        frmReporteUsuarios = new frmReporteUsuarios(frmPrincipal, true);
+        frmReporteUsuarios.setTitle("Reporte de Usuarios");
+        frmReporteUsuarios.setSize(570, 320);
+        frmReporteUsuarios.setLocationRelativeTo(null);
+        ctrlBotones.iconoBtn(frmReporteUsuarios.btnGenerar, rss + "pdf.png", 25, 25);
+        ctrlBotones.iconoBtn(frmReporteUsuarios.btnLimpiar, rss + "limpiar.png", 25, 25);
+        ctrlBotones.iconoBtn(frmReporteUsuarios.btnRegresar, rss + "volver.png", 30, 30);
+        frmReporteUsuarios.btnGenerar.addActionListener(this);
+        frmReporteUsuarios.btnLimpiar.addActionListener(this);
+        frmReporteUsuarios.btnRegresar.addActionListener(this);
+        frmReporteUsuarios.setVisible(true);
     }
 
     private void nuevoUsuario() {
@@ -367,11 +400,57 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener, K
         empleadoDaoImpl.resetContrasenia(idUsuario);
     }
 
-    private JasperPrint reporte(){
-        empleadoDaoImpl = new empleadoDaoImpl();
-        return empleadoDaoImpl.reporteUsuarios();
+    private void btnRegresar() {
+        frmReporteUsuarios.dispose();
     }
-    
+
+    private void limpiarReporte() {
+        frmReporteUsuarios.cbCargo.setSelectedIndex(0);
+        frmReporteUsuarios.fechaInicio.setDate(null);
+        frmReporteUsuarios.fechaFin.setDate(null);
+    }
+
+    private JasperPrint reportes() {
+        String cargo;
+        SimpleDateFormat sdfInicio = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+        SimpleDateFormat sdfFin = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
+        String fechaInicio;
+        String fechaFin;
+        empleadoDaoImpl = new empleadoDaoImpl();
+        if (frmReporteUsuarios.cbCargo.getSelectedIndex() == 0) {
+            cargo = "";
+        } else {
+            cargo = frmReporteUsuarios.cbCargo.getSelectedItem().toString();
+        }
+
+        if (frmReporteUsuarios.fechaInicio.getDate() == null) {
+            fechaInicio = "";
+        } else {
+            fechaInicio = sdfInicio.format(frmReporteUsuarios.fechaInicio.getDate());
+        }
+        if (frmReporteUsuarios.fechaFin.getDate() == null) {
+            fechaFin = "";
+        } else {
+            fechaFin = sdfFin.format(frmReporteUsuarios.fechaFin.getDate());
+        }
+
+        if (cargo.equals("") && fechaInicio.equals("") && fechaFin.equals("")) {
+            return empleadoDaoImpl.reporteUsuariosSinFiltro();
+        } else if (!cargo.equals("") && (fechaInicio.equals("") || fechaFin.equals(""))) {
+            if (fechaInicio.equals("") && fechaFin.equals("")) {
+                return empleadoDaoImpl.reporteUsuariosCargo(cargo);
+            } else {
+                JOptionPane.showMessageDialog(frmReporteUsuarios, "Por favor seleccione la fecha faltante");
+                return null;
+            }
+        } else if (cargo.equals("") && (!fechaInicio.equals("") || !fechaFin.equals(""))) {
+            JOptionPane.showMessageDialog(frmReporteUsuarios, "Reporte de fechas");
+            return null;
+        } else {
+            JOptionPane.showMessageDialog(frmReporteUsuarios, "Reporte con cargo y fechas");
+            return null;
+        }
+    }
     @Override
     public void keyTyped(KeyEvent e) {
         ctrlValidaciones = new controlValidaciones();
