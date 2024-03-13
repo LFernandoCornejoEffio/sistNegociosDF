@@ -99,8 +99,16 @@ public class frmUsuarios extends javax.swing.JPanel {
         btnLimpiar.setText("LIMPIAR");
         jPanel1.add(btnLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 20, 130, 30));
 
-        btnReporte.setText("Reporte");
-        jPanel1.add(btnReporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 20, -1, -1));
+        btnReporte.setBackground(new java.awt.Color(0, 102, 255));
+        btnReporte.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        btnReporte.setForeground(new java.awt.Color(255, 255, 255));
+        btnReporte.setText("REPORTES");
+        btnReporte.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReporteActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnReporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 20, 130, 30));
 
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 90, 1085, 70));
 
@@ -127,6 +135,10 @@ public class frmUsuarios extends javax.swing.JPanel {
         btnExcel.setText("EXCEL");
         add(btnExcel, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 620, 130, 30));
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnReporteActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

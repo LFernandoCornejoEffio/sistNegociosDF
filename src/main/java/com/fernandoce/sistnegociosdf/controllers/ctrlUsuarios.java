@@ -11,19 +11,16 @@ import com.fernandoce.sistnegociosdf.entidades.eTipoDoc;
 import com.fernandoce.sistnegociosdf.extras.controlBotones;
 import com.fernandoce.sistnegociosdf.extras.controlItemMenu;
 import com.fernandoce.sistnegociosdf.extras.controlValidaciones;
-import com.fernandoce.sistnegociosdf.extras.exportarExcel;
 import com.fernandoce.sistnegociosdf.formularios.frmEditarUsuario;
 import com.fernandoce.sistnegociosdf.formularios.frmNuevoUsuario;
 import com.fernandoce.sistnegociosdf.formularios.frmPrincipal;
 import com.fernandoce.sistnegociosdf.formularios.frmReporteUsuarios;
 import com.fernandoce.sistnegociosdf.formularios.frmUsuarios;
-import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
@@ -31,7 +28,6 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -80,8 +76,7 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener, K
         }
 
         if (e.getSource() == this.btnExcel) {
-            exportarExcel excel = new exportarExcel();
-            excel.excelReporte("Usuarios", tblUsuarios);
+            excel();
         }
 
         if (e.getSource() == this.btnBuscar) {
@@ -99,7 +94,7 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener, K
         }
 
         if (e.getSource() == this.menuEditar) {
-            idPersona = Integer.parseInt(String.valueOf(tblUsuarios.getValueAt(fila, 1)));
+            idPersona = Integer.parseInt(String.valueOf(tblUsuarios.getValueAt(fila, 0)));
             showEditar(idPersona);
         }
 
@@ -116,7 +111,7 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener, K
         if (e.getSource() == this.menuEliminar) {
             String[] opciones = {"Si", "NO"};
             String user = String.valueOf(tblUsuarios.getValueAt(fila, 2));
-            idPersona = Integer.parseInt(String.valueOf(tblUsuarios.getValueAt(fila, 1)));
+            idPersona = Integer.parseInt(String.valueOf(tblUsuarios.getValueAt(fila, 0)));
             int rpta = JOptionPane.showOptionDialog(this, "¿Estas seguro de eliminar al usuario " + user + "?", "Eliminar usuario", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opciones, opciones[0]);
             if (rpta == 0) {
                 eliminar(idPersona);
@@ -181,6 +176,7 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener, K
 
         if (e.getSource() == frmReporteUsuarios.btnGenerar) {
             reportes();
+            limpiarReporte();
         }
 
         if (e.getSource() == frmReporteUsuarios.btnLimpiar) {
@@ -203,7 +199,8 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener, K
         frmPrincipal = new frmPrincipal();
         frmReporteUsuarios = new frmReporteUsuarios(frmPrincipal, true);
         frmReporteUsuarios.setTitle("Reporte de Usuarios");
-        frmReporteUsuarios.setSize(570, 320);
+        frmReporteUsuarios.setSize(550, 320);
+        frmReporteUsuarios.setResizable(false);
         frmReporteUsuarios.setLocationRelativeTo(null);
         ctrlBotones.iconoBtn(frmReporteUsuarios.btnGenerar, rss + "pdf.png", 25, 25);
         ctrlBotones.iconoBtn(frmReporteUsuarios.btnLimpiar, rss + "limpiar.png", 25, 25);
@@ -306,7 +303,7 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener, K
         ctrlBotones.iconoBtn(frmEditarUsuario.btnCancelar, rss + "return.png", 30, 30);
         empleado = empleadoDaoImpl.obtenerObjetoPorId(idPersona);
         frmEditarUsuario.idPersona.setText(String.valueOf(empleado.getIdPersona()));
-        frmEditarUsuario.idPersona.setVisible(false);
+        frmEditarUsuario.idPersona.setVisible(true);
         frmEditarUsuario.txtNombre.setText(empleado.getNombre().toUpperCase());
         frmEditarUsuario.txtPaterno.setText(empleado.getApPaterno().toUpperCase());
         frmEditarUsuario.txtMaterno.setText(empleado.getApMaterno().toUpperCase());
@@ -334,6 +331,7 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener, K
         ctrlBotones.iconoBtn(btnNuevo, rss + "agregaruser.png", 30, 30);
         ctrlBotones.iconoBtn(btnLimpiar, rss + "limpiar.png", 20, 20);
         ctrlBotones.iconoBtn(btnExcel, rss + "excel.png", 20, 20);
+        ctrlBotones.iconoBtn(btnReporte, rss + "pdf.png", 20, 20);
     }
 
     private void iconItemMenu() {
@@ -404,6 +402,11 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener, K
         frmReporteUsuarios.dispose();
     }
 
+    private void excel() {
+        empleadoDaoImpl = new empleadoDaoImpl();
+        empleadoDaoImpl.reporteUsuariosExcel(tblUsuarios);
+    }
+
     private void limpiarReporte() {
         frmReporteUsuarios.cbCargo.setSelectedIndex(0);
         frmReporteUsuarios.fechaInicio.setDate(null);
@@ -444,13 +447,13 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener, K
                 return null;
             }
         } else if (cargo.equals("") && (!fechaInicio.equals("") || !fechaFin.equals(""))) {
-            JOptionPane.showMessageDialog(frmReporteUsuarios, "Reporte de fechas");
-            return null;
-        } else {
-            JOptionPane.showMessageDialog(frmReporteUsuarios, "Reporte con cargo y fechas");
-            return null;
+            return empleadoDaoImpl.reporteUsuariosFecha(fechaInicio, fechaFin);
+        } else {            
+            return empleadoDaoImpl.reporteUsuariosCargoFecha(cargo, fechaInicio, fechaFin);
         }
+        
     }
+
     @Override
     public void keyTyped(KeyEvent e) {
         ctrlValidaciones = new controlValidaciones();

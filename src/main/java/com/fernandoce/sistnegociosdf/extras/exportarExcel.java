@@ -23,13 +23,11 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  */
 public class exportarExcel {
 
-    public boolean excelReporte(String reporte, JTable tabla) {
-
-        String ruta = "D:\\NegociosDF\\Excel\\" + reporte + "\\";
+    public boolean excelReporte(String nameHoja, JTable tabla, String ruta) {
         Workbook libro = new XSSFWorkbook();
         fechaActual fecha = new fechaActual();
-        final String nameFile = fecha.getFechaActual() + ".xlsx";
-        Sheet hoja = libro.createSheet(reporte);
+        final String nameFile = nameHoja + "_" + fecha.getFechaActual() + ".xlsx";
+        Sheet hoja = libro.createSheet(nameHoja);
 
         Row fila = hoja.createRow(0);
 
@@ -66,7 +64,6 @@ public class exportarExcel {
             libro.write(outputStream);
             libro.close();
             outputStream.close();
-            JOptionPane.showMessageDialog(null, "Se Genero Correctamente El Archivo Excel.");
             return true;
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Se produjo un error al generar excel.\n" + e.getMessage());

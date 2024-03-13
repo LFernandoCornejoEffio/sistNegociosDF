@@ -58,12 +58,4 @@ public class tipoDocDaoImpl implements tipoDocDao {
         }
         return listaTipoDoc;
     }
-    
-    public static void main(String[] args) {
-        tipoDocDao t = new tipoDocDaoImpl();
-        List<eTipoDoc> lista = t.listar();
-        for (int i = 0; i < lista.size(); i++) {
-            System.out.println(lista.get(i).getNombreTipoDoc());
-        }
-    }
 }

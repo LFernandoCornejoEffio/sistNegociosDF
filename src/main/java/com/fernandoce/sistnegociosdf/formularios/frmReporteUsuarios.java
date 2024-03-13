@@ -64,25 +64,25 @@ public class frmReporteUsuarios extends javax.swing.JDialog {
 
         jLabel3.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel3.setText("Fecha Fin:");
-        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 30, 70, 24));
+        jLabel3.setText("Hasta:");
+        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 30, 50, 24));
 
         fechaFin.setBackground(new java.awt.Color(255, 255, 255));
         fechaFin.setForeground(new java.awt.Color(255, 255, 255));
         fechaFin.setOpaque(false);
-        jPanel2.add(fechaFin, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 30, 120, 30));
+        jPanel2.add(fechaFin, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 30, 120, 30));
 
         jLabel4.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel4.setText("Fecha Inicio:");
-        jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, 70, 30));
+        jLabel4.setText("Desde:");
+        jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, 50, 30));
 
         fechaInicio.setBackground(new java.awt.Color(255, 255, 255));
         fechaInicio.setForeground(new java.awt.Color(0, 0, 0));
         fechaInicio.setOpaque(false);
-        jPanel2.add(fechaInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 30, 130, 30));
+        jPanel2.add(fechaInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 30, 130, 30));
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 110, 500, 90));
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 110, 480, 90));
 
         btnGenerar.setBackground(new java.awt.Color(0, 0, 255));
         btnGenerar.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
@@ -111,7 +111,7 @@ public class frmReporteUsuarios extends javax.swing.JDialog {
         btnRegresar.setBorder(null);
         jPanel1.add(btnRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(355, 220, 130, 40));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 560, 280));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 550, 280));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
