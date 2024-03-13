@@ -84,15 +84,15 @@ public class encriptacionRSA {
 
     }
 
-    public static void main(String[] args) {
-        encriptacionRSA eRSA = new encriptacionRSA();
-        String texto = "holi asd";
-
-        String encri2 = eRSA.encrypt(texto);
-        System.out.println("encri2: " + encri2);
-
-        String desc2 = eRSA.decrypt(encri2);
-        System.out.println("desc2: " + desc2);
-    }
+//    public static void main(String[] args) {
+//        encriptacionRSA eRSA = new encriptacionRSA();
+//        String texto = "holi asd";
+//
+//        String encri2 = eRSA.encrypt(texto);
+//        System.out.println("encri2: " + encri2);
+//
+//        String desc2 = eRSA.decrypt(encri2);
+//        System.out.println("desc2: " + desc2);
+//    }
 
 }

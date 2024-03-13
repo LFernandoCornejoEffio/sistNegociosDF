@@ -6,8 +6,8 @@ package com.fernandoce.sistnegociosdf.DAO.DAOImpl;
 
 import com.fernandoce.sistnegociosdf.DAO.empleadoDao;
 import com.fernandoce.sistnegociosdf.entidades.eEmpleado;
-import com.fernandoce.sistnegociosdf.entidades.eTipoDoc;
 import com.fernandoce.sistnegociosdf.extras.encriptacionRSA;
+import com.fernandoce.sistnegociosdf.extras.exportarExcel;
 import com.fernandoce.sistnegociosdf.extras.fechaActual;
 import java.awt.HeadlessException;
 import java.io.BufferedInputStream;
@@ -17,7 +17,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -28,9 +27,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Properties;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -51,6 +50,8 @@ public class empleadoDaoImpl implements empleadoDao {
     List<eEmpleado> listaEmpleados = null;
     eEmpleado empleado;
     encriptacionRSA encryptRsa;
+    static String rutasalidaPdf;
+    static String rutaSalidaExcel;
 
     @Override
     public eEmpleado login(String username, String password) {
@@ -264,7 +265,7 @@ public class empleadoDaoImpl implements empleadoDao {
                 rpta = true;
                 return rpta;
             } else {
-                return false;
+                return rpta;
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error al eliminar el usuario " + e);
@@ -332,7 +333,7 @@ public class empleadoDaoImpl implements empleadoDao {
         System.out.println(nameCom);
         String[] names = nameCom.split(" ");
         for (String i : names) {
-            username += i.substring(0, 1);//            
+            username += i.substring(0, 1);
         }
         int i = usernameExiste(username);
         String uL;
@@ -541,14 +542,42 @@ public class empleadoDaoImpl implements empleadoDao {
         }
     }
 
+    public void reporteUsuariosExcel(JTable tabla) {
+        Properties prop = new Properties();
+        String fileProperties = "application.properties";
+        InputStream setting = Conexion.class.getClassLoader().getResourceAsStream(fileProperties);
+        exportarExcel excel = new exportarExcel();
+        try {
+            prop.load(setting);
+            rutaSalidaExcel = prop.get("excelUsuarios").toString();
+            boolean reportExcel = excel.excelReporte("usuarios", tabla, rutaSalidaExcel);
+            if (reportExcel == true) {
+                JOptionPane.showMessageDialog(null, "Se creo el archivo excel.");
+            }
+            setting.close();
+
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error IOException. \n" + ex);
+        }
+    }
+
     public JasperPrint reporteUsuariosSinFiltro() {
         conn = Conexion.getConectar();
-        String url = "src/main/resources/reportes/";
-        String ruta = "D:/NegociosDF/Reportes/Usuarios/";
-        File reporte = new File(url + "reportUsuarios.jasper");
+        String url = "src/main/resources/reportes/usuarios/";
+        Properties prop = new Properties();
+        String fileProperties = "application.properties";
+        InputStream setting = Conexion.class.getClassLoader().getResourceAsStream(fileProperties);
+        try {
+            prop.load(setting);
+            rutasalidaPdf = prop.get("pdfUsuarios").toString();
+
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error IOException. \n" + ex);
+        }
+        File reporte = new File(url + "reporteUsuarios.jasper");
         fechaActual fecha = new fechaActual();
         final String nameFile = "reporte_" + fecha.getFechaActual() + ".pdf";
-        
+
         if (!reporte.exists()) {
             JOptionPane.showMessageDialog(null, "El reporte no se encuentra disponible");
             return null;
@@ -556,13 +585,74 @@ public class empleadoDaoImpl implements empleadoDao {
         InputStream inputStream;
         try {
             inputStream = new BufferedInputStream(new FileInputStream(reporte.getAbsoluteFile()));
-            JasperReport jasper = (JasperReport) JRLoader.loadObject(inputStream);   
+            JasperReport jasper = (JasperReport) JRLoader.loadObject(inputStream);
             JasperPrint print = JasperFillManager.fillReport(jasper, null, conn);
-            String fileSalida = ruta + nameFile;
-            FileOutputStream outputStream = new FileOutputStream(new File(fileSalida));
-            JasperExportManager.exportReportToPdfStream(print, outputStream);
-            JOptionPane.showMessageDialog(null, "Se genero el reporte correctamente.");
-            outputStream.close();
+            String fileSalida = rutasalidaPdf + nameFile;
+            try (FileOutputStream outputStream = new FileOutputStream(new File(fileSalida))) {
+                JasperExportManager.exportReportToPdfStream(print, outputStream);
+                JOptionPane.showMessageDialog(null, "Se genero el reporte correctamente.");
+                outputStream.close();
+            }
+            setting.close();
+            inputStream.close();
+            return print;
+        } catch (FileNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, "Error FileNotFoundException.\n" + ex);
+            return null;
+        } catch (JRException ex) {
+            JOptionPane.showMessageDialog(null, "Error JRException.\n" + ex);
+            System.out.println("Error JRE: " + ex);
+            return null;
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error IOException.\n" + ex);
+            return null;
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Error al cerrar la conexión.\n" + ex);
+                return null;
+            }
+        }
+    }
+
+    public JasperPrint reporteUsuariosCargo(String cargo) {
+        conn = Conexion.getConectar();
+        String url = "src/main/resources/reportes/usuarios/";
+        File reporte = new File(url + "reporteUsuariosCargo.jasper");
+        fechaActual fecha = new fechaActual();
+        final String nameFile = "reporte_" + fecha.getFechaActual() + ".pdf";
+        Map parametro = new HashMap();
+        parametro.put("filtroCargo", cargo);
+        Properties prop = new Properties();
+        String fileProperties = "application.properties";
+        InputStream setting = Conexion.class.getClassLoader().getResourceAsStream(fileProperties);
+        try {
+            prop.load(setting);
+            rutasalidaPdf = prop.get("pdfUsuarios").toString();
+
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error IOException. \n" + ex);
+        }
+        if (!reporte.exists()) {
+            JOptionPane.showMessageDialog(null, "El reporte no se encuentra disponible");
+            return null;
+        }
+        InputStream inputStream;
+        try {
+            inputStream = new BufferedInputStream(new FileInputStream(reporte.getAbsoluteFile()));
+            JasperReport jasper = (JasperReport) JRLoader.loadObject(inputStream);
+
+            JasperPrint print = JasperFillManager.fillReport(jasper, parametro, conn);
+
+            String fileSalida = rutasalidaPdf + nameFile;
+
+            try (FileOutputStream outputStream = new FileOutputStream(new File(fileSalida))) {
+                JasperExportManager.exportReportToPdfStream(print, outputStream);
+                JOptionPane.showMessageDialog(null, "Se genero el reporte correctamente.");
+                outputStream.close();
+            }
+            setting.close();
             inputStream.close();
             return print;
         } catch (FileNotFoundException ex) {
@@ -585,16 +675,25 @@ public class empleadoDaoImpl implements empleadoDao {
         }
     }
     
-    public JasperPrint reporteUsuariosCargo(String cargo) {
+    public JasperPrint reporteUsuariosFecha(String fechaInicio, String fechaFin) {
         conn = Conexion.getConectar();
-        String url = "src/main/resources/reportes/";
-        String ruta = "D:/NegociosDF/Reportes/Usuarios/";
-        File reporte = new File(url + "reporteUsuariosCargo.jasper");
+        String url = "src/main/resources/reportes/usuarios/";
+        File reporte = new File(url + "reporteUsuariosFecha.jasper");
         fechaActual fecha = new fechaActual();
         final String nameFile = "reporte_" + fecha.getFechaActual() + ".pdf";
         Map parametro = new HashMap();
-        parametro.put("filtroCargo", cargo);
+        parametro.put("fechaInicio", fechaInicio);
+        parametro.put("fechaFin", fechaFin);
+        Properties prop = new Properties();
+        String fileProperties = "application.properties";
+        InputStream setting = Conexion.class.getClassLoader().getResourceAsStream(fileProperties);
+        try {
+            prop.load(setting);
+            rutasalidaPdf = prop.get("pdfUsuarios").toString();
 
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error IOException. \n" + ex);
+        }
         if (!reporte.exists()) {
             JOptionPane.showMessageDialog(null, "El reporte no se encuentra disponible");
             return null;
@@ -606,14 +705,75 @@ public class empleadoDaoImpl implements empleadoDao {
 
             JasperPrint print = JasperFillManager.fillReport(jasper, parametro, conn);
 
-            String fileSalida = ruta + nameFile;
+            String fileSalida = rutasalidaPdf + nameFile;
 
-            FileOutputStream outputStream = new FileOutputStream(new File(fileSalida));
+            try (FileOutputStream outputStream = new FileOutputStream(new File(fileSalida))) {
+                JasperExportManager.exportReportToPdfStream(print, outputStream);
+                JOptionPane.showMessageDialog(null, "Se genero el reporte correctamente.");
+                outputStream.close();
+            }
+            setting.close();
+            inputStream.close();
+            return print;
+        } catch (FileNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, "Error FileNotFoundException.\n" + ex);
+            return null;
+        } catch (JRException ex) {
+            JOptionPane.showMessageDialog(null, "Error JRException.\n" + ex);
+            System.out.println("Error JRE: " + ex);
+            return null;
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error IOException.\n" + ex);
+            return null;
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Error al cerrar la conexión.\n" + ex);
+                return null;
+            }
+        }
+    }
+    
+    public JasperPrint reporteUsuariosCargoFecha(String cargo, String fechaInicio, String fechaFin) {
+        conn = Conexion.getConectar();
+        String url = "src/main/resources/reportes/usuarios/";
+        File reporte = new File(url + "reporteUsuariosCargoFecha.jasper");
+        fechaActual fecha = new fechaActual();
+        final String nameFile = "reporte_" + fecha.getFechaActual() + ".pdf";
+        Map parametro = new HashMap();
+        parametro.put("cargo", cargo);
+        parametro.put("fechaInicio", fechaInicio);
+        parametro.put("fechaFin", fechaFin);
+        Properties prop = new Properties();
+        String fileProperties = "application.properties";
+        InputStream setting = Conexion.class.getClassLoader().getResourceAsStream(fileProperties);
+        try {
+            prop.load(setting);
+            rutasalidaPdf = prop.get("pdfUsuarios").toString();
 
-            JasperExportManager.exportReportToPdfStream(print, outputStream);
-            JOptionPane.showMessageDialog(null, "Se genero el reporte correctamente.");
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error IOException. \n" + ex);
+        }
+        if (!reporte.exists()) {
+            JOptionPane.showMessageDialog(null, "El reporte no se encuentra disponible");
+            return null;
+        }
+        InputStream inputStream;
+        try {
+            inputStream = new BufferedInputStream(new FileInputStream(reporte.getAbsoluteFile()));
+            JasperReport jasper = (JasperReport) JRLoader.loadObject(inputStream);
 
-            outputStream.close();
+            JasperPrint print = JasperFillManager.fillReport(jasper, parametro, conn);
+
+            String fileSalida = rutasalidaPdf + nameFile;
+
+            try (FileOutputStream outputStream = new FileOutputStream(new File(fileSalida))) {
+                JasperExportManager.exportReportToPdfStream(print, outputStream);
+                JOptionPane.showMessageDialog(null, "Se genero el reporte correctamente.");
+                outputStream.close();
+            }
+            setting.close();
             inputStream.close();
             return print;
         } catch (FileNotFoundException ex) {
