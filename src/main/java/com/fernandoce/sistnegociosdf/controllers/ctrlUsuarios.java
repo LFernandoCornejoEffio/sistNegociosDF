@@ -4,18 +4,18 @@
  */
 package com.fernandoce.sistnegociosdf.controllers;
 
-import com.fernandoce.sistnegociosdf.DAO.DAOImpl.empleadoDaoImpl;
 import com.fernandoce.sistnegociosdf.DAO.DAOImpl.tipoDocDaoImpl;
-import com.fernandoce.sistnegociosdf.entidades.eEmpleado;
+import com.fernandoce.sistnegociosdf.DAO.DAOImpl.usuariosDaoImpl;
+import com.fernandoce.sistnegociosdf.entidades.eUsuarios;
 import com.fernandoce.sistnegociosdf.entidades.eTipoDoc;
 import com.fernandoce.sistnegociosdf.extras.controlBotones;
 import com.fernandoce.sistnegociosdf.extras.controlItemMenu;
 import com.fernandoce.sistnegociosdf.extras.controlValidaciones;
-import com.fernandoce.sistnegociosdf.formularios.frmEditarUsuario;
-import com.fernandoce.sistnegociosdf.formularios.frmNuevoUsuario;
+import com.fernandoce.sistnegociosdf.formularios.mantenimiento.frmEditarUsuario;
+import com.fernandoce.sistnegociosdf.formularios.mantenimiento.frmNuevoUsuario;
 import com.fernandoce.sistnegociosdf.formularios.frmPrincipal;
-import com.fernandoce.sistnegociosdf.formularios.frmReporteUsuarios;
-import com.fernandoce.sistnegociosdf.formularios.frmUsuarios;
+import com.fernandoce.sistnegociosdf.formularios.mantenimiento.frmReporteUsuarios;
+import com.fernandoce.sistnegociosdf.formularios.mantenimiento.frmUsuarios;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -38,13 +38,13 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener, K
     controlValidaciones ctrlValidaciones;
     controlBotones ctrlBotones;
     controlItemMenu ctrlItemMenu;
-    empleadoDaoImpl empleadoDaoImpl;
+    usuariosDaoImpl usuariosDaoImpl;
     frmNuevoUsuario frmNuevoUsuario;
     frmEditarUsuario frmEditarUsuario;
     frmPrincipal frmPrincipal;
     frmReporteUsuarios frmReporteUsuarios;
     tipoDocDaoImpl tipoDocDaoImpl;
-    eEmpleado empleado;
+    eUsuarios empleado;
 
     String rss = "src/main/resources/imagenes/";
 
@@ -100,7 +100,7 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener, K
 
         if (e.getSource() == this.menuReset) {
             String[] opciones = {"Si", "NO"};
-            idPersona = Integer.parseInt(String.valueOf(tblUsuarios.getValueAt(fila, 1)));
+            idPersona = Integer.parseInt(String.valueOf(tblUsuarios.getValueAt(fila, 0)));
             String user = String.valueOf(tblUsuarios.getValueAt(fila, 2));
             int rpta = JOptionPane.showOptionDialog(this, "¿Estas seguro de resetear la contraseña del usuario " + user + "?", "Resetear Contraseña", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opciones, opciones[0]);
             if (rpta == 0) {
@@ -127,7 +127,7 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener, K
             String tel = frmNuevoUsuario.txtTelefono.getText();
             String direcion = frmNuevoUsuario.txtDireccion.getText();
             String cargo = String.valueOf(frmNuevoUsuario.cbCargo.getSelectedItem());
-            empleado = new eEmpleado();
+            empleado = new eUsuarios();
             empleado.setNombre(name);
             empleado.setApPaterno(apPat);
             empleado.setApMaterno(apMat);
@@ -157,7 +157,7 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener, K
             String tel = frmEditarUsuario.txtTelefono.getText();
             String direcion = frmEditarUsuario.txtDireccion.getText();
             String cargo = String.valueOf(frmEditarUsuario.cbCargo.getSelectedItem());
-            empleado = new eEmpleado();
+            empleado = new eUsuarios();
             empleado.setIdPersona(idEmpleado);
             empleado.setNombre(name);
             empleado.setApPaterno(apPat);
@@ -236,35 +236,35 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener, K
         frmNuevoUsuario.setVisible(true);
     }
 
-    private void btnGuardar(eEmpleado empleado) {
-        empleadoDaoImpl = new empleadoDaoImpl();
-        empleadoDaoImpl.insertar(empleado);
-        btnLimpiarNuevo();
+    private void btnGuardar(eUsuarios empleado) {
+        usuariosDaoImpl = new usuariosDaoImpl();
+        usuariosDaoImpl.insertar(empleado);
+        boolean update = usuariosDaoImpl.insertar(empleado);
+        if (update == true) {
+            JOptionPane.showMessageDialog(frmNuevoUsuario, "El usuario se registro con exito.");
+            btnLimpiarNuevo();
+        }
         Listar(tblUsuarios, "", "");
         frmNuevoUsuario.dispose();
     }
 
-    private void btnEditar(eEmpleado empleado) {
-        empleadoDaoImpl = new empleadoDaoImpl();
-        boolean update = empleadoDaoImpl.editar(empleado);
+    private void btnEditar(eUsuarios empleado) {
+        usuariosDaoImpl = new usuariosDaoImpl();
+        boolean update = usuariosDaoImpl.editar(empleado);
         if (update == true) {
             JOptionPane.showMessageDialog(frmEditarUsuario, "El usuario se actualizo con exito.");
             btnLimpiarEdit();
-        } else {
-            JOptionPane.showMessageDialog(frmEditarUsuario, "Ocurrio un error al actualizar los datos del usuario.");
         }
         Listar(tblUsuarios, "", "");
         frmEditarUsuario.dispose();
     }
 
     private void eliminar(int idPersona) {
-        empleadoDaoImpl = new empleadoDaoImpl();
-        boolean delete = empleadoDaoImpl.eliminar(idPersona);
+        usuariosDaoImpl = new usuariosDaoImpl();
+        boolean delete = usuariosDaoImpl.eliminar(idPersona);
         if (delete == true) {
-            JOptionPane.showMessageDialog(frmEditarUsuario, "El usuario se elimino con exito.");
+            JOptionPane.showMessageDialog(null, "El usuario se elimino con exito.");
             Listar(tblUsuarios, "", "");
-        } else {
-            JOptionPane.showMessageDialog(frmEditarUsuario, "Ocurrio un error al eliminar al usuario.");
         }
     }
 
@@ -301,7 +301,7 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener, K
         frmEditarUsuario.setLocationRelativeTo(null);
         ctrlBotones.iconoBtn(frmEditarUsuario.btnGuardar, rss + "salvar.png", 30, 30);
         ctrlBotones.iconoBtn(frmEditarUsuario.btnCancelar, rss + "return.png", 30, 30);
-        empleado = empleadoDaoImpl.obtenerObjetoPorId(idPersona);
+        empleado = usuariosDaoImpl.obtenerObjetoPorId(idPersona);
         frmEditarUsuario.idPersona.setText(String.valueOf(empleado.getIdPersona()));
         frmEditarUsuario.idPersona.setVisible(true);
         frmEditarUsuario.txtNombre.setText(empleado.getNombre().toUpperCase());
@@ -342,10 +342,10 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener, K
     }
 
     private void Listar(JTable tbl, String campo, String busqueda) {
-        empleadoDaoImpl = new empleadoDaoImpl();
-        List<eEmpleado> lista = empleadoDaoImpl.listar(campo, busqueda);
+        usuariosDaoImpl = new usuariosDaoImpl();
+        List<eUsuarios> lista = usuariosDaoImpl.listar(campo, busqueda);
         DefaultTableModel dtm = new DefaultTableModel();
-        String titulos[] = {"ID", "N°", "Nombre Completo", "Tipo Doc.", "Numero Doc.", "Cargo", "Telefono", "Dirección", "Usuario", "Ultimo Acceso"};
+        String titulos[] = {"ID", "N°", "Nombre Completo", "Tipo Doc.", "Numero Doc.", "Cargo", "Telefono", "Dirección", "Usuario", "Ultimo Acceso", "Primer Acceso"};
         for (String titulo : titulos) {
             dtm.addColumn(titulo);
         }
@@ -363,6 +363,7 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener, K
             filaTbl[7] = lista.get(i).getDireccion();
             filaTbl[8] = lista.get(i).getUsername();
             filaTbl[9] = lista.get(i).getUltimo_Acceso();
+            filaTbl[10] = lista.get(i).getPrimerAcceso();
             dtm.addRow(filaTbl);
         }
         tbl.setModel(dtm);
@@ -389,13 +390,19 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener, K
         comboBox.removeAllItems();
         for (int i = 0; i < listaTipoDoc.size(); i++) {
             comboBox.addItem(new eTipoDoc(listaTipoDoc.get(i).getIdTipoDoc(), listaTipoDoc.get(i).getAbrevTipoDoc().toUpperCase()));
-
         }
     }
 
-    private void resetPass(int idUsuario) {
-        empleadoDaoImpl = new empleadoDaoImpl();
-        empleadoDaoImpl.resetContrasenia(idUsuario);
+    private void resetPass(int idPersona) {
+
+        usuariosDaoImpl = new usuariosDaoImpl();
+        boolean resetPass = usuariosDaoImpl.resetContrasenia(idPersona);
+        if (resetPass == true) {
+            JOptionPane.showMessageDialog(frmEditarUsuario, "El reseteo la contraseña con exito.");
+            Listar(tblUsuarios, "", "");
+        } else {
+            JOptionPane.showMessageDialog(frmEditarUsuario, "Ocurrio un error al resetear la contraseña.");
+        }
     }
 
     private void btnRegresar() {
@@ -403,8 +410,8 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener, K
     }
 
     private void excel() {
-        empleadoDaoImpl = new empleadoDaoImpl();
-        empleadoDaoImpl.reporteUsuariosExcel(tblUsuarios);
+        usuariosDaoImpl = new usuariosDaoImpl();
+        usuariosDaoImpl.reporteUsuariosExcel(tblUsuarios);
     }
 
     private void limpiarReporte() {
@@ -419,7 +426,7 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener, K
         SimpleDateFormat sdfFin = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
         String fechaInicio;
         String fechaFin;
-        empleadoDaoImpl = new empleadoDaoImpl();
+        usuariosDaoImpl = new usuariosDaoImpl();
         if (frmReporteUsuarios.cbCargo.getSelectedIndex() == 0) {
             cargo = "";
         } else {
@@ -438,20 +445,20 @@ public final class ctrlUsuarios extends frmUsuarios implements ActionListener, K
         }
 
         if (cargo.equals("") && fechaInicio.equals("") && fechaFin.equals("")) {
-            return empleadoDaoImpl.reporteUsuariosSinFiltro();
+            return usuariosDaoImpl.reporteUsuariosSinFiltro();
         } else if (!cargo.equals("") && (fechaInicio.equals("") || fechaFin.equals(""))) {
             if (fechaInicio.equals("") && fechaFin.equals("")) {
-                return empleadoDaoImpl.reporteUsuariosCargo(cargo);
+                return usuariosDaoImpl.reporteUsuariosCargo(cargo);
             } else {
                 JOptionPane.showMessageDialog(frmReporteUsuarios, "Por favor seleccione la fecha faltante");
                 return null;
             }
         } else if (cargo.equals("") && (!fechaInicio.equals("") || !fechaFin.equals(""))) {
-            return empleadoDaoImpl.reporteUsuariosFecha(fechaInicio, fechaFin);
-        } else {            
-            return empleadoDaoImpl.reporteUsuariosCargoFecha(cargo, fechaInicio, fechaFin);
+            return usuariosDaoImpl.reporteUsuariosFecha(fechaInicio, fechaFin);
+        } else {
+            return usuariosDaoImpl.reporteUsuariosCargoFecha(cargo, fechaInicio, fechaFin);
         }
-        
+
     }
 
     @Override

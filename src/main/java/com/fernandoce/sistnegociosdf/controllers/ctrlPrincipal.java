@@ -4,7 +4,7 @@
  */
 package com.fernandoce.sistnegociosdf.controllers;
 
-import com.fernandoce.sistnegociosdf.entidades.eEmpleado;
+import com.fernandoce.sistnegociosdf.entidades.eUsuarios;
 import com.fernandoce.sistnegociosdf.extras.controlBotones;
 import com.fernandoce.sistnegociosdf.extras.controlLabel;
 import com.fernandoce.sistnegociosdf.extras.controlPaneles;
@@ -13,7 +13,7 @@ import com.fernandoce.sistnegociosdf.formularios.components.menuAlmacen;
 import com.fernandoce.sistnegociosdf.formularios.components.menuVendedor;
 import com.fernandoce.sistnegociosdf.formularios.frmInicio;
 import com.fernandoce.sistnegociosdf.formularios.frmPrincipal;
-import com.fernandoce.sistnegociosdf.formularios.frmUsuarios;
+import com.fernandoce.sistnegociosdf.formularios.mantenimiento.frmUsuarios;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.JOptionPane;
@@ -37,11 +37,11 @@ public class ctrlPrincipal extends frmPrincipal implements MouseListener {
     
     String rss = "src/main/resources/imagenes/";
 
-    public ctrlPrincipal(eEmpleado empleado) {
+    public ctrlPrincipal(eUsuarios empleado) {
         iniciar(empleado);
     }
 
-    private void iniciar(eEmpleado empleado) {
+    private void iniciar(eUsuarios empleado) {
         this.setSize(1400, 800);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
@@ -55,7 +55,7 @@ public class ctrlPrincipal extends frmPrincipal implements MouseListener {
                 ctrlPaneles.showPanel(this.panelMenu, menuAdmin, 250, 800);
                 menuAdmin.setLocation(0, 0);
                 menuAdmin.btnInicio.addMouseListener(this);
-                menuAdmin.btnUsuarios.addMouseListener(this);
+                menuAdmin.btnMantenimiento.addMouseListener(this);
                 menuAdmin.btnCerrarSesion.addMouseListener(this);
                 inicio();
             }
@@ -76,6 +76,7 @@ public class ctrlPrincipal extends frmPrincipal implements MouseListener {
         String nombreCompleto = empleado.getNombre() + " " + empleado.getApPaterno() + " " + empleado.getApMaterno();
         this.txtuser.setText(nombreCompleto);
         this.txtCargo.setText(empleado.getCargo());
+        this.lblId.setText(String.valueOf(empleado.getIdPersona()));
     }
 
     @Override
@@ -84,12 +85,12 @@ public class ctrlPrincipal extends frmPrincipal implements MouseListener {
         if (e.getSource() == menuAdmin.btnInicio) {
             inicio();
         }
-
-        if (e.getSource() == menuAdmin.btnUsuarios) {
-            ctrlUsuarios ctrlU = new ctrlUsuarios();
-            ctrlPaneles.showPanel(this.panelContenido, ctrlU, 1105, 670);
+        
+        if (e.getSource() == menuAdmin.btnMantenimiento) {
+            ctrlMantenimiento ctrlMantenimiento = new ctrlMantenimiento(this.txtCargo.getText());
+            ctrlPaneles.showPanel(this.panelContenido, ctrlMantenimiento, 1105, 670);
         }
-
+        
         if (e.getSource() == menuAdmin.btnCerrarSesion) {
             cerrar();
         }
@@ -138,8 +139,12 @@ public class ctrlPrincipal extends frmPrincipal implements MouseListener {
     
     private void setIconBtn(){
         ctrlLabel = new controlLabel();        
-        ctrlLabel.mostrarImgLbl(menuAdmin.iconInicio, rss + "home.png", 40, 40);
-        ctrlLabel.mostrarImgLbl(menuAdmin.iconUsuarios, rss+"users.png", 40, 40);
-        ctrlLabel.mostrarImgLbl(menuAdmin.iconCerrarSesion, rss+"cerrar-sesion.png", 40, 40);
+        ctrlLabel.mostrarImgLbl(menuAdmin.iconInicio, rss + "home.png", 30, 30);
+        ctrlLabel.mostrarImgLbl(menuAdmin.iconVentas, rss+"ventas.png", 30, 30);
+        ctrlLabel.mostrarImgLbl(menuAdmin.iconCompras, rss+"compra.png", 30, 30);
+        ctrlLabel.mostrarImgLbl(menuAdmin.iconMantenimiento, rss+"mantenimiento.png", 30, 30);
+        ctrlLabel.mostrarImgLbl(menuAdmin.iconReportes, rss+"reporte.png", 30, 30);
+        ctrlLabel.mostrarImgLbl(menuAdmin.iconMisDatos, rss+"misDatos.png", 30, 30);
+        ctrlLabel.mostrarImgLbl(menuAdmin.iconCerrarSesion, rss+"cerrar-sesion.png", 30, 30);
     }
 }

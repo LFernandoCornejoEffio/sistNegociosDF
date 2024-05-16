@@ -1,0 +1,25 @@
+DELIMITER //
+CREATE OR REPLACE PROCEDURE insertarUsuario(
+IN _nombre varchar(100),
+IN _apPaterno varchar(100),
+IN _apMaterno varchar(100),
+IN _tipoDocId int(11),
+IN _numDoc varchar(20),
+IN _telefono varchar(20),
+IN _direccion varchar(200),
+IN _cargo varchar(20),
+IN _username varchar(25),
+IN _contrasenia varchar(250)
+)
+BEGIN
+	DECLARE _idUsuario int;
+    INSERT INTO persona(nombre, apPaterno, apMaterno, tipoDocId, numDoc, telefono, direccion, fechaCreacion, estado) VALUES(_nombre, _apPaterno, _apMaterno, _tipoDocId, _numDoc, _telefono, _direccion, now(), 'Activo');    
+    SET _idUsuario = LAST_INSERT_ID();
+    IF _idUsuario > 0 THEN
+    	INSERT INTO usuarios(idUsuario, cargo, username, contrasenia, ultimo_acceso, primerAcceso) VALUES(_idUsuario, _cargo, _username, _contrasenia, null, 'SI');
+    ELSE
+    	SET _idUsuario = 0;
+    END iF;
+    SELECT _idUsuario;
+END //
+DELIMITER ;

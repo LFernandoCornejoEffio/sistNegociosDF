@@ -42,59 +42,142 @@ public class menuAdmin extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
         btnInicio = new javax.swing.JPanel();
         iconInicio = new javax.swing.JLabel();
         lblInicio = new javax.swing.JLabel();
-        btnUsuarios = new javax.swing.JPanel();
-        iconUsuarios = new javax.swing.JLabel();
-        lblUsuarios = new javax.swing.JLabel();
+        btnVentas = new javax.swing.JPanel();
+        iconVentas = new javax.swing.JLabel();
+        lblVentas = new javax.swing.JLabel();
+        btnCompras = new javax.swing.JPanel();
+        iconCompras = new javax.swing.JLabel();
+        lblCompras = new javax.swing.JLabel();
+        btnMantenimiento = new javax.swing.JPanel();
+        iconMantenimiento = new javax.swing.JLabel();
+        lblMantenimiento = new javax.swing.JLabel();
+        btnReportes = new javax.swing.JPanel();
+        iconReportes = new javax.swing.JLabel();
+        lblReportes = new javax.swing.JLabel();
+        btnMisDatos = new javax.swing.JPanel();
+        iconMisDatos = new javax.swing.JLabel();
+        lblMisDatos = new javax.swing.JLabel();
         btnCerrarSesion = new javax.swing.JPanel();
         iconCerrarSesion = new javax.swing.JLabel();
         lblCerrarSesion = new javax.swing.JLabel();
 
+        setPreferredSize(new java.awt.Dimension(250, 800));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel1.setFont(new java.awt.Font("Courier New", 1, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("SISTEMA NEGOCIOS D&F");
+        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 15, 230, 40));
+        add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 60, 230, 5));
 
         btnInicio.setOpaque(false);
         btnInicio.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         btnInicio.add(iconInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 0, 50, 50));
 
+        lblInicio.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         lblInicio.setForeground(new java.awt.Color(255, 255, 255));
         lblInicio.setText("INICIO");
         btnInicio.add(lblInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 0, 180, 50));
 
-        add(btnInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 250, 50));
+        add(btnInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 80, 250, 50));
 
-        btnUsuarios.setOpaque(false);
-        btnUsuarios.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        btnUsuarios.add(iconUsuarios, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 0, 50, 50));
+        btnVentas.setOpaque(false);
+        btnVentas.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        btnVentas.add(iconVentas, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 0, 50, 50));
 
-        lblUsuarios.setForeground(new java.awt.Color(255, 255, 255));
-        lblUsuarios.setText("USUARIOS");
-        btnUsuarios.add(lblUsuarios, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 0, 180, 50));
+        lblVentas.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        lblVentas.setForeground(new java.awt.Color(255, 255, 255));
+        lblVentas.setText("VENTAS");
+        btnVentas.add(lblVentas, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 0, 180, 50));
 
-        add(btnUsuarios, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 80, 250, 50));
+        add(btnVentas, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 130, 250, 50));
+
+        btnCompras.setOpaque(false);
+        btnCompras.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        btnCompras.add(iconCompras, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 0, 50, 50));
+
+        lblCompras.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        lblCompras.setForeground(new java.awt.Color(255, 255, 255));
+        lblCompras.setText("COMPRAS");
+        btnCompras.add(lblCompras, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 0, 180, 50));
+
+        add(btnCompras, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 180, 250, 50));
+
+        btnMantenimiento.setOpaque(false);
+        btnMantenimiento.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        btnMantenimiento.add(iconMantenimiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 0, 50, 50));
+
+        lblMantenimiento.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        lblMantenimiento.setForeground(new java.awt.Color(255, 255, 255));
+        lblMantenimiento.setText("MANTENIMIENTO");
+        btnMantenimiento.add(lblMantenimiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 0, 180, 50));
+
+        add(btnMantenimiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 230, 250, 50));
+
+        btnReportes.setOpaque(false);
+        btnReportes.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        btnReportes.add(iconReportes, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 0, 50, 50));
+
+        lblReportes.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        lblReportes.setForeground(new java.awt.Color(255, 255, 255));
+        lblReportes.setText("REPORTES");
+        btnReportes.add(lblReportes, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 0, 180, 50));
+
+        add(btnReportes, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 280, 250, 50));
+
+        btnMisDatos.setOpaque(false);
+        btnMisDatos.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        btnMisDatos.add(iconMisDatos, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 0, 50, 50));
+
+        lblMisDatos.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        lblMisDatos.setForeground(new java.awt.Color(255, 255, 255));
+        lblMisDatos.setText("MIS DATOS");
+        btnMisDatos.add(lblMisDatos, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 0, 180, 50));
+
+        add(btnMisDatos, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 330, 250, 50));
 
         btnCerrarSesion.setOpaque(false);
         btnCerrarSesion.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         btnCerrarSesion.add(iconCerrarSesion, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 0, 50, 50));
 
+        lblCerrarSesion.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         lblCerrarSesion.setForeground(new java.awt.Color(255, 255, 255));
         lblCerrarSesion.setText("CERRAR SESION");
         btnCerrarSesion.add(lblCerrarSesion, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 0, 180, 50));
 
-        add(btnCerrarSesion, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 130, 250, 50));
+        add(btnCerrarSesion, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 380, 250, 50));
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JPanel btnCerrarSesion;
+    public javax.swing.JPanel btnCompras;
     public javax.swing.JPanel btnInicio;
-    public javax.swing.JPanel btnUsuarios;
+    public javax.swing.JPanel btnMantenimiento;
+    public javax.swing.JPanel btnMisDatos;
+    public javax.swing.JPanel btnReportes;
+    public javax.swing.JPanel btnVentas;
     public javax.swing.JLabel iconCerrarSesion;
+    public javax.swing.JLabel iconCompras;
     public javax.swing.JLabel iconInicio;
-    public javax.swing.JLabel iconUsuarios;
+    public javax.swing.JLabel iconMantenimiento;
+    public javax.swing.JLabel iconMisDatos;
+    public javax.swing.JLabel iconReportes;
+    public javax.swing.JLabel iconVentas;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JSeparator jSeparator1;
     public javax.swing.JLabel lblCerrarSesion;
+    public javax.swing.JLabel lblCompras;
     public javax.swing.JLabel lblInicio;
-    public javax.swing.JLabel lblUsuarios;
+    public javax.swing.JLabel lblMantenimiento;
+    public javax.swing.JLabel lblMisDatos;
+    public javax.swing.JLabel lblReportes;
+    public javax.swing.JLabel lblVentas;
     // End of variables declaration//GEN-END:variables
 }
