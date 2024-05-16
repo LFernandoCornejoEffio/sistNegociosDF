@@ -5,7 +5,11 @@
 package com.fernandoce.sistnegociosdf.extras;
 
 import java.awt.BorderLayout;
+import java.awt.Image;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -23,4 +27,5 @@ public class controlPaneles {
         panelPadre.revalidate();
         panelPadre.repaint();
     }
+    
 }

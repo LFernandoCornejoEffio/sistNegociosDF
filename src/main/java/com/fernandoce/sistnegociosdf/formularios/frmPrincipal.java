@@ -33,6 +33,7 @@ public class frmPrincipal extends javax.swing.JFrame {
         txtuser = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         txtCargo = new javax.swing.JLabel();
+        lblId = new javax.swing.JLabel();
         panelContenido = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -75,6 +76,7 @@ public class frmPrincipal extends javax.swing.JFrame {
         txtCargo.setFont(new java.awt.Font("Arial Narrow", 1, 18)); // NOI18N
         txtCargo.setForeground(new java.awt.Color(0, 0, 0));
         panelDatosUser.add(txtCargo, new org.netbeans.lib.awtextra.AbsoluteConstraints(575, 10, 150, 40));
+        panelDatosUser.add(lblId, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 10, 40, 40));
 
         jPanel1.add(panelDatosUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 10, 1105, 60));
 
@@ -104,6 +106,7 @@ public class frmPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
+    public javax.swing.JLabel lblId;
     public javax.swing.JPanel panelContenido;
     public javax.swing.JPanel panelDatosUser;
     public javax.swing.JPanel panelMenu;

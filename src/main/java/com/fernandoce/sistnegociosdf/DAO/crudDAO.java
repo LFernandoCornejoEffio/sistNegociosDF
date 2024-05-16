@@ -11,7 +11,7 @@ import java.util.List;
  * @author lfern
  */
 public interface crudDAO <T>{
-    public List<T> listar();
+    public List<T> listar(String campo, String busqueda);
     public boolean insertar(T objeto);
     public boolean editar(T objeto);
     public boolean eliminar(int idObjeto);

@@ -4,8 +4,8 @@
  */
 package com.fernandoce.sistnegociosdf.controllers;
 
-import com.fernandoce.sistnegociosdf.DAO.DAOImpl.empleadoDaoImpl;
-import com.fernandoce.sistnegociosdf.entidades.eEmpleado;
+import com.fernandoce.sistnegociosdf.DAO.DAOImpl.usuariosDaoImpl;
+import com.fernandoce.sistnegociosdf.entidades.eUsuarios;
 import com.fernandoce.sistnegociosdf.extras.controlBotones;
 import com.fernandoce.sistnegociosdf.extras.controlLabel;
 import com.fernandoce.sistnegociosdf.extras.controlPaneles;
@@ -30,7 +30,7 @@ public class ctrlLogin extends frmLogin implements MouseListener, KeyListener {
     controlLabel ctrlLabel;
     controlPaneles ctrlPaneles;
 
-    empleadoDaoImpl empleadoDAOImpl;
+    usuariosDaoImpl usuariosDaoImpl;
     
     logo log = new logo();
 
@@ -65,8 +65,8 @@ public class ctrlLogin extends frmLogin implements MouseListener, KeyListener {
             if (txtUser.getText().equals("") || String.valueOf(txtPass.getPassword()).equals("")) {
                 JOptionPane.showMessageDialog(this, "Estimado usuario los campos usuario y contraseña son obligatorios", "Validación de Campos", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                eEmpleado eEmpleado = login();
-                if (eEmpleado != null) {
+                eUsuarios eEmpleado = login();
+                if (eEmpleado.getIdPersona() != 0) {
                     if (login().getPrimerAcceso().equals("SI")) {
                         JOptionPane.showMessageDialog(rootPane, "BINVENIDO AL SISTEMA: \n" + eEmpleado.getNombre().toUpperCase() + " " + eEmpleado.getApPaterno().toUpperCase() + " " + eEmpleado.getApMaterno().toUpperCase() + "\n"
                                 + "<html><p style=\"color:red\">Al ser su Primer Acceso debe cambiar su contraseña</p></html>");
@@ -77,7 +77,7 @@ public class ctrlLogin extends frmLogin implements MouseListener, KeyListener {
                         JOptionPane.showMessageDialog(rootPane, "Bienvenido al sistema: \n" + eEmpleado.getNombre().toUpperCase() + " " + eEmpleado.getApPaterno().toUpperCase() + " " + eEmpleado.getApMaterno().toUpperCase());
                         ctrlPrincipal ctrlPrincipal = new ctrlPrincipal(eEmpleado);
                         ctrlPrincipal.setVisible(true);
-                        empleadoDAOImpl.ultimoAcceso(eEmpleado.getIdPersona());
+                        usuariosDaoImpl.ultimoAcceso(eEmpleado.getIdPersona());
                         this.dispose();
                     }
                 }
@@ -121,11 +121,11 @@ public class ctrlLogin extends frmLogin implements MouseListener, KeyListener {
         ctrlBotones.iconoBtn(button, root, ancho, alto);
     }
 
-    private eEmpleado login() {
-        empleadoDAOImpl = new empleadoDaoImpl();
+    private eUsuarios login() {
+        usuariosDaoImpl = new usuariosDaoImpl();
         String username = this.txtUser.getText();
         String password = String.valueOf(txtPass.getPassword());
-        eEmpleado empleado = empleadoDAOImpl.login(username, password);
+        eUsuarios empleado = usuariosDaoImpl.login(username, password);
         return empleado;
     }
 
